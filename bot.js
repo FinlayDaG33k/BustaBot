@@ -1,20 +1,3 @@
-Skip to content
- 
- 
-Search…
-All gists
-GitHub
-New gist @FinlayDaG33k
- Edit
-  Delete
-  Star 0
-  @FinlayDaG33kFinlayDaG33k/bot SECRET
-Last active a minute ago
-Embed  
-<script src="https://gist.github.com/FinlayDaG33k/4d5f413a29524ddcb044833ad2b77b61.js"></script>
-  Download ZIP
- Code  Revisions 18
-Raw  bot
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
 var baseBet = 10; // In bits, is not used if variable mode is enabled.
 var baseMultiplier = 1.05; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
