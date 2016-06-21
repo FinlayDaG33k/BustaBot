@@ -10,7 +10,7 @@ var maxBalance = 100000; //The bot will stop when your total balance is higher t
 // The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
 // If you want to use the notifications, you need to register yourself with the telegram bot at:
 // http://telegram.me/FDGbusta_bot
-var sendNotifications = true;
+var sendNotifications = false;
 var chatid = ''; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
 var chatsecret = ''; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
 
@@ -26,23 +26,18 @@ var startBalance = engine.getBalance();
 var reportUrl = ''; // just chilling out here (but don't tell him to go away please)
 var cashedOut = '';
 var lastBonus = '';
-
-function httpGet(Url)
-{
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", Url, true); // true for asynchronous 
-    xmlHttp.send(null);
-}
+var savedProfit = 0; // we still have to send out this profit to the server
 
 // Initialization
 if(typeof jQuery === "undefined"){
+	// Yes, you really need jQuery for this script to work (especially the notifications part)
 	var script = document.createElement('script'); 
 	script.src = 'https://code.jquery.com/jquery-3.0.0.min.js'; // the URL to the jQuery library
 	document.documentElement.firstChild.appendChild(script) // now append the script into HEAD, it will fetch and be executed
 }
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.20.13.54 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.20.20.20 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
@@ -67,12 +62,26 @@ engine.on('game_starting', function(info) {
 			var notifyProfit = -Math.abs(currentBet / 100);
 		}
 		if(!firstGame){
-			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php?profit=' + (notifyProfit).toFixed(2) + '&chatid='+ chatid +'&chatsecret=' + chatsecret;
-			httpGet(reportUrl);
+			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
+			$.post(reportUrl,{
+				profit: ((notifyProfit) + savedProfit).toFixed(2),
+				chatid: chatid,
+				chatsecret: chatsecret
+			}, 
+			function(data){
+				console.log('[Bot] Sending profit to the server.');
+				if(data == 'Sucess!'){
+					console.log('[Bot] Sucesfully send profits to the server!');
+					savedProfit = 0;
+				}else{
+					console.warn('[WARN] Could not send profits to the server, Trying again next round!');
+					savedProfit = (savedProfit / 100) + notifyProfit;
+				}
+			});
 		}
 	}
 	
-	if (engine.getBalance() >= maxBalance) {
+	if (engine.getBalance() >= (maxBalance * 100)) {
 		engine.stop();
 	}
 
