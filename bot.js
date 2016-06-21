@@ -10,9 +10,9 @@ var maxBalance = 100000; //The bot will stop when your total balance is higher t
 // The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
 // If you want to use the notifications, you need to register yourself with the telegram bot at:
 // http://telegram.me/FDGbusta_bot
-var sendNotifications = false;
-var chatid = ''; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
-var chatsecret = ''; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
+var sendNotifications = true;
+var chatid = '2466444'; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
+var chatsecret = '7OSQURktOW'; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
 var baseSatoshi = baseBet * 100; // Calculated
@@ -71,6 +71,10 @@ engine.on('game_starting', function(info) {
 			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php?profit=' + (notifyProfit).toFixed(2) + '&chatid='+ chatid +'&chatsecret=' + chatsecret;
 			httpGet(reportUrl);
 		}
+	}
+	
+	if (engine.getBalance() >= maxBalance) {
+		engine.stop();
 	}
 
     if (coolingDown) {     
@@ -157,9 +161,6 @@ engine.on('cashed_out', function(data){
 		console.log('[Bot] Successfully cashed out at ' + (data.stopped_at / 100) + 'x');
 		cashedOut = data.stopped_at / 100;
     }
-	if (engine.getBalance() >= maxBalance) {
-		engine.stop();
-	}
 });
 
 engine.on('game_crash', function(data) {
