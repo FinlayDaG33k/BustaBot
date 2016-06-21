@@ -11,8 +11,8 @@ var maxBalance = 100000; //The bot will stop when your total balance is higher t
 // If you want to use the notifications, you need to register yourself with the telegram bot at:
 // http://telegram.me/FDGbusta_bot
 var sendNotifications = true;
-var chatid = '2466444'; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
-var chatsecret = '7OSQURktOW'; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
+var chatid = ''; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
+var chatsecret = ''; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
 var baseSatoshi = baseBet * 100; // Calculated
