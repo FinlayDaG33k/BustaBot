@@ -1,3 +1,20 @@
+Skip to content
+ 
+ 
+Search…
+All gists
+GitHub
+New gist @FinlayDaG33k
+ Edit
+  Delete
+  Star 0
+  @FinlayDaG33kFinlayDaG33k/bot SECRET
+Last active a minute ago
+Embed  
+<script src="https://gist.github.com/FinlayDaG33k/4d5f413a29524ddcb044833ad2b77b61.js"></script>
+  Download ZIP
+ Code  Revisions 18
+Raw  bot
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
 var baseBet = 10; // In bits, is not used if variable mode is enabled.
 var baseMultiplier = 1.05; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
@@ -37,7 +54,7 @@ if(typeof jQuery === "undefined"){
 }
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.20.20.20 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.21.20.37 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
@@ -74,8 +91,10 @@ engine.on('game_starting', function(info) {
 					console.log('[Bot] Sucesfully send profits to the server!');
 					savedProfit = 0;
 				}else{
+					savedProfit = savedProfit + notifyProfit;
 					console.warn('[WARN] Could not send profits to the server, Trying again next round!');
-					savedProfit = (savedProfit / 100) + notifyProfit;
+					console.warn('[WARN] Reason: ' + data);
+					console.warn('[WARN] Remaining profits to push: ' + (savedProfit / 100));
 				}
 			});
 		}
@@ -180,3 +199,13 @@ engine.on('game_crash', function(data) {
 		lastBonus = data.bonuses[username];
 	}
 });
+ @FinlayDaG33k
+           
+Write  Preview
+
+Leave a comment
+Attach files by dragging & dropping,  Choose Files selecting them, or pasting from the clipboard.
+ Styling with Markdown is supported
+Comment
+Status API Training Shop Blog About
+© 2016 GitHub, Inc. Terms Privacy Security Contact Help
