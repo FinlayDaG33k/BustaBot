@@ -122,7 +122,7 @@ engine.on('game_starting', function(info) {
 		}
 		
 		//MaxLossStreak
-	        if (highestlossStreak =< lossStreak) {
+	        if (highestlossStreak <= lossStreak) {
 		    	highestlossStreak = lossStreak;
         	}
 	
