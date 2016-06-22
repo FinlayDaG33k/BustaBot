@@ -87,7 +87,7 @@ engine.on('game_starting', function(info) {
 					console.log('[Bot] Sucesfully send profits to the server!');
 					savedProfit = 0;
 				}else{
-					savedProfit = savedProfit + notifyProfit;
+					savedProfit = (savedProfit).toFixed(2) + (notifyProfit).toFixed(2);
 					console.warn('[WARN] Could not send profits to the server, Trying again next round!');
 					console.warn('[WARN] Reason: ' + data);
 					console.warn('[WARN] Remaining profits to push: ' + (savedProfit / 100));
