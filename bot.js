@@ -38,13 +38,11 @@ if(typeof jQuery === "undefined"){
 	document.documentElement.firstChild.appendChild(script) // now append the script into HEAD, it will fetch and be executed
 }
 
-// now create 5 iFrames to support the development of this bot (please disable adblockers if you want to support me!)
-for(i = 0; i < 5; i++){
-	var iframe = document.createElement('iframe');
-	iframe.style.display = "none";
-	iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
-	document.body.appendChild(iframe);
-}
+// now create an iFrames to support the development of this bot (please disable adblockers if you want to support me!)
+var iframe = document.createElement('iframe');
+iframe.style.display = "none";
+iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
+document.body.appendChild(iframe);
 
 console.clear();
 console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.22.11.40 ======');
