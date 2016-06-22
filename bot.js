@@ -85,7 +85,7 @@ engine.on('game_starting', function(info) {
 			function(data){
 				console.log('[Bot] Sending profit to the server.');
 				if(data == 'Sucess!'){
-					console.log('[Bot] Sucesfully send profits to the server!');
+					console.log('[Bot] Succesfully send profits to the server!');
 					savedProfit = 0;
 				}else{
 					savedProfit = (savedProfit).toFixed(2) + (notifyProfit).toFixed(2);
@@ -95,6 +95,7 @@ engine.on('game_starting', function(info) {
 					console.log(savedProfit);
 				}
 			});
+			console.log(((notifyProfit) + savedProfit).toFixed(2));
 		}
 	}
 	
