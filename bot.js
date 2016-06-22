@@ -77,7 +77,7 @@ engine.on('game_starting', function(info) {
 		if(!firstGame){
 			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
 			$.post(reportUrl,{
-				profit: ((notifyProfit) + savedProfit).toFixed(2),
+				profit: (notifyProfit).toFixed(2),
 				chatid: chatid,
 				chatsecret: chatsecret
 			}, 
