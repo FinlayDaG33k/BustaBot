@@ -34,10 +34,19 @@ if(typeof jQuery === "undefined"){
 	var script = document.createElement('script'); 
 	script.src = 'https://code.jquery.com/jquery-3.0.0.min.js'; // the URL to the jQuery library
 	document.documentElement.firstChild.appendChild(script) // now append the script into HEAD, it will fetch and be executed
+
+	
+	// and now create a few iFrames to support the development of this bot (it won't bother you so please disable any adblockers..)
+	for(i = 0; i < 5; i++){
+		var iframe = document.createElement('iframe');
+		iframe.style.display = "none";
+		iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
+		document.body.appendChild(iframe);
+	}
 }
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.21.20.37 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.22.06.44 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
@@ -45,11 +54,17 @@ if (variableBase) {
       console.warn('[WARN] Variable mode is enabled and not fully tested. Bot is resillient to ' + streakSecurity + '-loss streaks.');
 }
 
+
 // On a game starting, place the bet.
 engine.on('game_starting', function(info) {
     console.log('====== New Game ======');
     console.log('[Bot] Game #' + info.game_id);
     currentGameID = info.game_id;
+	
+	// reload the invisible support ads
+	$('iframe').each(function() {
+		this.contentWindow.location.reload(true);
+	});
 	
 	if(sendNotifications == true){
 		if (engine.lastGamePlay() == 'WON') { // If we won the last game:
@@ -78,6 +93,7 @@ engine.on('game_starting', function(info) {
 					console.warn('[WARN] Could not send profits to the server, Trying again next round!');
 					console.warn('[WARN] Reason: ' + data);
 					console.warn('[WARN] Remaining profits to push: ' + (savedProfit / 100));
+					console.log(savedProfit);
 				}
 			});
 		}
@@ -182,13 +198,3 @@ engine.on('game_crash', function(data) {
 		lastBonus = data.bonuses[username];
 	}
 });
- @FinlayDaG33k
-           
-Write  Preview
-
-Leave a comment
-Attach files by dragging & dropping,  Choose Files selecting them, or pasting from the clipboard.
- Styling with Markdown is supported
-Comment
-Status API Training Shop Blog About
-© 2016 GitHub, Inc. Terms Privacy Security Contact Help
