@@ -1,6 +1,8 @@
 # BustaBot
 My Bustabit script that works together with a custom Telegram bot :)  
 Right now, it only shows the profit, but more features coming up!  
+Want to make a commit to the repository?  
+Great! But please use the `dev` branch for that :)
 
 #Todo
 - [ ] Notify the user when a loss-streak happened
