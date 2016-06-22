@@ -1,9 +1,9 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
 var baseBet = 10; // In bits, is not used if variable mode is enabled.
-var baseMultiplier = 1.05; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
+var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
 var variableBase = true; // Enable variable mode (very experimental)
 var maximumBet = 99999; // Maximum bet the bot will do (in bits).
-var streakSecurity = 4; // Number of loss-streak you wanna be safe for. (Reccommended is 3+)
+var streakSecurity = 5; // Number of loss-streak you wanna be safe for. (Reccommended is 3+)
 var maxBalance = 100000; //The bot will stop when your total balance is higher that this value (in bits).
 
 // Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
