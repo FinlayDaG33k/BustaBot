@@ -123,6 +123,8 @@ engine.on('game_starting', function(info) {
 	        if (highestlossStreak <= lossStreak) {
 		    	highestlossStreak = lossStreak;
         	}
+        	
+        	console.log('[Bot] You got a loss streak of ' + lossStreak + '. This highest number of losses is: ' + highestlossStreak);
 	
 	        if (lossStreak > streakSecurity) { // If we're on a loss streak, wait a few games!
 			coolingDown = true;
@@ -195,7 +197,6 @@ engine.on('game_crash', function(data) {
 		console.log('[Bot] Game crashed at ' + (data.game_crash / 100) + 'x');
 		console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
 		console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
-		console.log('[Bot] You got a loss streak of ' + lossStreak + '. This highest number of losses is: ' + highestlossStreak);
 		lastBonus = data.bonuses[username];
 	}
 });
