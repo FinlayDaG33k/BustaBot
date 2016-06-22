@@ -122,8 +122,8 @@ engine.on('game_starting', function(info) {
 		}
 		
 		//MaxLossStreak
-	        if (highlossStreak < lossStreak) {
-		    	highlossStreak = lossStreak;
+	        if (highestlossStreak =< lossStreak) {
+		    	highestlossStreak = lossStreak;
         	}
 	
 	        if (lossStreak > streakSecurity) { // If we're on a loss streak, wait a few games!
