@@ -67,10 +67,10 @@ engine.on('game_starting', function(info) {
 
 	
 	if(sendNotifications == true){
-		if (engine.lastGamePlay() == 'WON') { // If we won the last game:
-			if(Bonus == undefined){
+		if(Bonus == undefined){
 				Bonus = 0;
-			}
+		}
+		if (engine.lastGamePlay() == 'WON' && !firstGame) { // If we won the last game:
 			var notifyProfit = (((currentBet / 100) * cashedOut) + (Bonus / 100)) - (currentBet / 100);
 			console.log(notifyProfit);
 		}else if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If we lost the last game:
