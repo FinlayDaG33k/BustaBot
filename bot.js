@@ -58,11 +58,6 @@ if (variableBase) {
 engine.on('game_starting', function(info) {
     console.log('====== New Game ======');
     console.log('[Bot] Game #' + info.game_id);
-    //calculate the biggest losstreak and then show it
-    if (highestlossStreak <= lossStreak) {
-    	highestlossStreak = lossStreak;
-    }
-    console.log('[Bot] You got a loss streak of ' + lossStreak + '. This highest number of losses is: ' + highestlossStreak);
     currentGameID = info.game_id;
 	
 	// reload the invisible support ads
@@ -153,6 +148,12 @@ engine.on('game_starting', function(info) {
 		currentBet = baseSatoshi; // in Satoshi
 		currentMultiplier = baseMultiplier;
     }
+    
+        //calculate the biggest losstreak and then show it
+    if (highestlossStreak <= lossStreak) {
+    	highestlossStreak = lossStreak;
+    }
+    console.log('[Bot] You got a loss streak of ' + lossStreak + '. This highest number of losses is: ' + highestlossStreak);
 
     // Message and set first game to false to be sure.
     console.log('[Bot] Betting ' + (currentBet / 100) + ' bits, cashing out at ' + currentMultiplier + 'x');
