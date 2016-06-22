@@ -28,7 +28,7 @@ var cashedOut = '';
 var lastBonus = '';
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
-var highlossStreak = 0;
+var highestlossStreak = 0;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -196,7 +196,7 @@ engine.on('game_crash', function(data) {
 		console.log('[Bot] Game crashed at ' + (data.game_crash / 100) + 'x');
 		console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
 		console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
-		console.log('[Bot] You got a loss streak of ' + lossStreak + '. This highest number of losses is: ' + highlossStreak);
+		console.log('[Bot] You got a loss streak of ' + lossStreak + '. This highest number of losses is: ' + highestlossStreak);
 		lastBonus = data.bonuses[username];
 	}
 });
