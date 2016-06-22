@@ -10,7 +10,7 @@ var maxBalance = 50000; //The bot will stop when your total balance is higher th
 // The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
 // If you want to use the notifications, you need to register yourself with the telegram bot at:
 // http://telegram.me/FDGbusta_bot
-var sendNotifications = true;
+var sendNotifications = false;
 var chatid = ''; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
 var chatsecret = ''; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
 
@@ -28,7 +28,7 @@ var cashedOut = '';
 var lastBonus = '';
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
-streakSecurityloss = 0;
+var highlossStreak = 0;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -122,11 +122,15 @@ engine.on('game_starting', function(info) {
 			lastLoss /= 4;
 		}
 		
+		//MaxLossStreak
+	        if (highlossStreak < lossStreak) {
+		    	highlossStreak = lossStreak;
+        	}
 	
-    if (lossStreak > streakSecurity) { // If we're on a loss streak, wait a few games!
-		coolingDown = true;
-		return;
-    }
+	        if (lossStreak > streakSecurity) { // If we're on a loss streak, wait a few games!
+			coolingDown = true;
+			return;
+	    	}
 
 		currentBet *= 4; // Then multiply base bet by 4!
 		currentMultiplier = 1 + (totalLosses / currentBet);
@@ -194,6 +198,7 @@ engine.on('game_crash', function(data) {
 		console.log('[Bot] Game crashed at ' + (data.game_crash / 100) + 'x');
 		console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
 		console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
+		console.log('[Bot] You got a loss streak of ' + lossStreak + '. This highest number of losses is: ' + highlossStreak);
 		lastBonus = data.bonuses[username];
 	}
 });
