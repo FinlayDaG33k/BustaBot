@@ -68,10 +68,10 @@ engine.on('game_starting', function(info) {
 	
 	if(sendNotifications == true){
 		if (engine.lastGamePlay() == 'WON') { // If we won the last game:
-			if(lastBonus == undefined){
-				lastBonus = 0;
+			if(Bonus == undefined){
+				Bonus = 0;
 			}
-			var bonusProfit = ((currentBet / 100) * (lastBonus / 100));
+			var bonusProfit = ((currentBet / 100) * (Bonus / 100));
 			var notifyProfit = (((currentBet / 100) * cashedOut) + Bonus) - (currentBet / 100);
 			console.log(bonusProfit);
 			console.log((currentBet / 100) * cashedOut);
