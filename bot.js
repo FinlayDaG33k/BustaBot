@@ -74,7 +74,7 @@ engine.on('game_starting', function(info) {
 			var notifyProfit = (((currentBet / 100) * cashedOut) + (Bonus / 100)) - (currentBet / 100);
 			console.log(notifyProfit);
 		}else if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If we lost the last game:
-			var notifyProfit = -Math.abs(currentBet / 100);
+			var notifyProfit = -Math.abs((currentBet / 100) + (Bonus / 100));
 		}
 		if(!firstGame){
 			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
