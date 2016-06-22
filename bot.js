@@ -28,7 +28,7 @@ var cashedOut = '';
 var lastBonus = '';
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
-var highlossStreak = 0;
+var highestlossStreak = 0;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -45,7 +45,7 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.22.11.40 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.22.16.55 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
@@ -84,14 +84,13 @@ engine.on('game_starting', function(info) {
 			function(data){
 				console.log('[Bot] Sending profit to the server.');
 				if(data == 'Sucess!'){
-					console.log('[Bot] Sucesfully send profits to the server!');
+					console.log('[Bot] Succesfully send profits to the server!');
 					savedProfit = 0;
 				}else{
-					savedProfit = savedProfit + notifyProfit;
+					savedProfit = (savedProfit).toFixed(2) + (notifyProfit).toFixed(2);
 					console.warn('[WARN] Could not send profits to the server, Trying again next round!');
 					console.warn('[WARN] Reason: ' + data);
 					console.warn('[WARN] Remaining profits to push: ' + (savedProfit / 100));
-					console.log(savedProfit);
 				}
 			});
 		}
@@ -119,11 +118,6 @@ engine.on('game_starting', function(info) {
 			totalLosses += lastLoss;
 			lastLoss /= 4;
 		}
-		
-		//MaxLossStreak
-	        if (highlossStreak < lossStreak) {
-		    	highlossStreak = lossStreak;
-        	}
 	
 	        if (lossStreak > streakSecurity) { // If we're on a loss streak, wait a few games!
 			coolingDown = true;
@@ -154,6 +148,12 @@ engine.on('game_starting', function(info) {
 		currentBet = baseSatoshi; // in Satoshi
 		currentMultiplier = baseMultiplier;
     }
+    
+        //calculate the biggest losstreak and then show it
+    if (highestlossStreak <= lossStreak) {
+    	highestlossStreak = lossStreak;
+    }
+    console.log('[Bot] You got a loss streak of ' + lossStreak + '. This highest number of losses is: ' + highestlossStreak);
 
     // Message and set first game to false to be sure.
     console.log('[Bot] Betting ' + (currentBet / 100) + ' bits, cashing out at ' + currentMultiplier + 'x');
@@ -196,7 +196,6 @@ engine.on('game_crash', function(data) {
 		console.log('[Bot] Game crashed at ' + (data.game_crash / 100) + 'x');
 		console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
 		console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
-		console.log('[Bot] You got a loss streak of ' + lossStreak + '. This highest number of losses is: ' + highlossStreak);
 		lastBonus = data.bonuses[username];
 	}
 });
