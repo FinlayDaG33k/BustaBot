@@ -6,10 +6,12 @@ var maximumBet = 99999; // Maximum bet the bot will do (in bits).
 var streakSecurity = 5; // Number of loss-streak you wanna be safe for. (Reccommended is 3+)
 var maxBalance = 50000; //The bot will stop when your total balance is higher that this value (in bits).
 
-// Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
-// The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
-// If you want to use the notifications, you need to register yourself with the telegram bot at:
-// http://telegram.me/FDGbusta_bot
+/* 
+Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
+The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
+If you want to use the notifications, you need to register yourself with the telegram bot at:
+http://telegram.me/FDGbusta_bot 
+*/
 var sendNotifications = false;
 var chatid = ''; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
 var chatsecret = ''; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
@@ -45,7 +47,7 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.22.16.55 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.22.18 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
@@ -71,6 +73,9 @@ engine.on('game_starting', function(info) {
 			}
 			var bonusProfit = ((currentBet / 100) * (lastBonus / 100));
 			var notifyProfit = (((currentBet / 100) * cashedOut) + bonusProfit) - (currentBet / 100);
+			console.log(bonusProfit);
+			console.log((currentBet / 100) * cashedOut);
+			console.log(notifyProfit);
 		}else if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If we lost the last game:
 			var notifyProfit = -Math.abs(currentBet / 100);
 		}
