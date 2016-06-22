@@ -27,7 +27,7 @@ var coolingDown = false;
 var startBalance = engine.getBalance();
 var reportUrl = ''; // just chilling out here (but don't tell him to go away please)
 var cashedOut = '';
-var lastBonus = '';
+var Bonus = '';
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
@@ -72,7 +72,7 @@ engine.on('game_starting', function(info) {
 				lastBonus = 0;
 			}
 			var bonusProfit = ((currentBet / 100) * (lastBonus / 100));
-			var notifyProfit = (((currentBet / 100) * cashedOut) + bonusProfit) - (currentBet / 100);
+			var notifyProfit = (((currentBet / 100) * cashedOut) + Bonus) - (currentBet / 100);
 			console.log(bonusProfit);
 			console.log((currentBet / 100) * cashedOut);
 			console.log(notifyProfit);
@@ -201,6 +201,6 @@ engine.on('game_crash', function(data) {
 		console.log('[Bot] Game crashed at ' + (data.game_crash / 100) + 'x');
 		console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
 		console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
-		lastBonus = data.bonuses[username];
+		Bonus = data.bonuses[username];
 	}
 });
