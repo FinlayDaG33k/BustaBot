@@ -4,15 +4,15 @@ var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) re
 var variableBase = true; // Enable variable mode (very experimental)
 var maximumBet = 99999; // Maximum bet the bot will do (in bits).
 var streakSecurity = 5; // Number of loss-streak you wanna be safe for. (Reccommended is 3+)
-var maxBalance = 100000; //The bot will stop when your total balance is higher that this value (in bits).
+var maxBalance = 50000; //The bot will stop when your total balance is higher that this value (in bits).
 
 // Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
 // The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
 // If you want to use the notifications, you need to register yourself with the telegram bot at:
 // http://telegram.me/FDGbusta_bot
 var sendNotifications = true;
-var chatid = '2466444'; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
-var chatsecret = '0HTb1TvIVs'; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
+var chatid = ''; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
+var chatsecret = ''; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
 var baseSatoshi = baseBet * 100; // Calculated
@@ -27,6 +27,8 @@ var reportUrl = ''; // just chilling out here (but don't tell him to go away ple
 var cashedOut = '';
 var lastBonus = '';
 var savedProfit = 0; // we still have to send out this profit to the server
+var username = engine.getUsername();
+streakSecurityloss = 0;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -34,19 +36,18 @@ if(typeof jQuery === "undefined"){
 	var script = document.createElement('script'); 
 	script.src = 'https://code.jquery.com/jquery-3.0.0.min.js'; // the URL to the jQuery library
 	document.documentElement.firstChild.appendChild(script) // now append the script into HEAD, it will fetch and be executed
+}
 
-	
-	// and now create a few iFrames to support the development of this bot (it won't bother you so please disable any adblockers..)
-	for(i = 0; i < 5; i++){
-		var iframe = document.createElement('iframe');
-		iframe.style.display = "none";
-		iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
-		document.body.appendChild(iframe);
-	}
+// now create 5 iFrames to support the development of this bot (please disable adblockers if you want to support me!)
+for(i = 0; i < 5; i++){
+	var iframe = document.createElement('iframe');
+	iframe.style.display = "none";
+	iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
+	document.body.appendChild(iframe);
 }
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.22.06.44 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.22.11.40 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
@@ -193,7 +194,6 @@ engine.on('game_crash', function(data) {
 		console.log('[Bot] Game crashed at ' + (data.game_crash / 100) + 'x');
 		console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
 		console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
-		var username = engine.getUsername();
 		lastBonus = data.bonuses[username];
 	}
 });
