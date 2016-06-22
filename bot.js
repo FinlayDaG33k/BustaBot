@@ -71,7 +71,6 @@ engine.on('game_starting', function(info) {
 			}
 			var bonusProfit = ((currentBet / 100) * (lastBonus / 100));
 			var notifyProfit = (((currentBet / 100) * cashedOut) + bonusProfit) - (currentBet / 100);
-			console.log(notifyProfit);
 		}else if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If we lost the last game:
 			var notifyProfit = -Math.abs(currentBet / 100);
 		}
@@ -92,10 +91,8 @@ engine.on('game_starting', function(info) {
 					console.warn('[WARN] Could not send profits to the server, Trying again next round!');
 					console.warn('[WARN] Reason: ' + data);
 					console.warn('[WARN] Remaining profits to push: ' + (savedProfit / 100));
-					console.log(savedProfit);
 				}
 			});
-			console.log(((notifyProfit) + savedProfit).toFixed(2));
 		}
 	}
 	
