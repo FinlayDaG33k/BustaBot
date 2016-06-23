@@ -29,7 +29,7 @@ var lastBonus = '';
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
-var streakSecurity = 0;
+var streakSecurity = 9;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -52,19 +52,21 @@ console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bi
 
 if (variableBase) {
       	console.warn('[WARN] Variable mode is enabled and not fully tested. Bot is resillient to ' + streakSecurity + '-loss streaks.');
-	if(streakSecurity <= 0){
-		console.warn('[WARN] streakSecurity should be atleast 1, if you just want to get rid of your bits, please donate them to FinlayDaG33k');
-		engine.stop();
-	}
 	console.log('Trying to test for a suitable streakSecurity');
-	for(i = 9; i > streakSecurity; i--){
+	// This piece is not finished yet, but should calculate the maximum streak security.
+	for(i = 0; i <= streakSecurity; i++){
 		console.log('Trying streakSecurity ' + i);
-		// I still have to do this :C
+		var streakSecuritytotalLosses = 0;
+		var divider = 100;
+		for(i2 = 0; i2 < i; i2++){
+			divider += (100 * Math.pow(4, (i2 + 1)));
+		}
+		console.log(newBaseBet);
 	}
 }
 
 if(dryRun == true){
-	console.warn('[WARN] Dry run mode enabled! not actual betting will happen!');
+	console.warn('[WARN] Dry run mode enabled! no actual betting will happen!');
 }
 // On a game starting, place the bet.
 engine.on('game_starting', function(info) {
