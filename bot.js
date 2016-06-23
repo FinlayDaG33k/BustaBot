@@ -1,3 +1,8 @@
+/*
+DEV NOTES:
+Each consecutive rows losses you 20% of your total balance, this can be used to determine the streaksecurity.
+*/
+
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
 var baseBet = 10; // In bits, is not used if variable mode is enabled.
 var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
