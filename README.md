@@ -8,9 +8,10 @@ Great! But please use the `dev` branch for that :)
 - [ ] Notify the user when a loss-streak happened
 - [ ] Notify user if their bot has became in-active
 - [ ] Update profit calculations (bot doesn't seem to correctly calculate the profit)
-- [ ] Turn off the bot if the streakSecurity can't be reached
+- [ ] Turn off the bot if the streakSecurity can't be reached (or lower streak security)
 
 # Donators
 | BaB name  | Amount |
 | ------------- | ------------- |
 | Juddz96  | 10,000.00  |
+| KruppesNL  | 300.00  |
