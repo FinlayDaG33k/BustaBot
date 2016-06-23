@@ -5,6 +5,7 @@ var variableBase = true; // Enable variable mode (very experimental)
 var maximumBet = 99999; // Maximum bet the bot will do (in bits).
 var streakSecurity = 5; // Number of loss-streak you wanna be safe for. (Reccommended is 3+)
 var maxBalance = 50000; //The bot will stop when your total balance is higher that this value (in bits).
+var dryRun = false; // set this to true wil disable the actual betting.
 
 // Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
 // The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
@@ -53,6 +54,9 @@ if (variableBase) {
       console.warn('[WARN] Variable mode is enabled and not fully tested. Bot is resillient to ' + streakSecurity + '-loss streaks.');
 }
 
+if(dryRun == true){
+	console.warn('[WARN] Dry run mode enabled! not actual betting will happen!');
+}
 
 // On a game starting, place the bet.
 engine.on('game_starting', function(info) {
@@ -164,7 +168,9 @@ engine.on('game_starting', function(info) {
 			console.warn('[Warn] Bet size exceeds maximum bet, lowering bet to ' + (maximumBet * 100) + ' bits');
 			currentBet = maximumBet;
 		}
-		engine.placeBet(currentBet, Math.round(currentMultiplier * 100), false);
+		if(dryRun == false){
+			engine.placeBet(currentBet, Math.round(currentMultiplier * 100), false);
+		}
     }else{ // Otherwise insufficent funds...
 		if (engine.getBalance() < 100) {
 			console.error('[Bot] Insufficent funds to do anything... stopping');
