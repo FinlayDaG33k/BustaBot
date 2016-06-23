@@ -3,8 +3,8 @@ var baseBet = 10; // In bits, is not used if variable mode is enabled.
 var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
 var variableBase = true; // Enable variable mode (very experimental)
 var maximumBet = 99999; // Maximum bet the bot will do (in bits).
+var streakSecurity = 5; // Number of loss-streak you wanna be safe for. (Reccommended is 3+)
 var maxBalance = 50000; //The bot will stop when your total balance is higher that this value (in bits).
-var dryRun = true; // set this to true wil disable the actual betting.
 
 // Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
 // The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
@@ -29,7 +29,6 @@ var lastBonus = '';
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
-var streakSecurity = 9;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -51,23 +50,10 @@ console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
 if (variableBase) {
-      	console.warn('[WARN] Variable mode is enabled and not fully tested. Bot is resillient to ' + streakSecurity + '-loss streaks.');
-	console.log('Trying to test for a suitable streakSecurity');
-	// This piece is not finished yet, but should calculate the maximum streak security.
-	for(i = 0; i <= streakSecurity; i++){
-		console.log('Trying streakSecurity ' + i);
-		var streakSecuritytotalLosses = 0;
-		var divider = 100;
-		for(i2 = 0; i2 < i; i2++){
-			divider += (100 * Math.pow(4, (i2 + 1)));
-		}
-		console.log(newBaseBet);
-	}
+      console.warn('[WARN] Variable mode is enabled and not fully tested. Bot is resillient to ' + streakSecurity + '-loss streaks.');
 }
 
-if(dryRun == true){
-	console.warn('[WARN] Dry run mode enabled! no actual betting will happen!');
-}
+
 // On a game starting, place the bet.
 engine.on('game_starting', function(info) {
     console.log('====== New Game ======');
@@ -178,9 +164,7 @@ engine.on('game_starting', function(info) {
 			console.warn('[Warn] Bet size exceeds maximum bet, lowering bet to ' + (maximumBet * 100) + ' bits');
 			currentBet = maximumBet;
 		}
-		if(dryRun == false){
-			engine.placeBet(currentBet, Math.round(currentMultiplier * 100), false);
-		}
+		engine.placeBet(currentBet, Math.round(currentMultiplier * 100), false);
     }else{ // Otherwise insufficent funds...
 		if (engine.getBalance() < 100) {
 			console.error('[Bot] Insufficent funds to do anything... stopping');
