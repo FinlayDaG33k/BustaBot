@@ -81,7 +81,7 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.24.8 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.24.13 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
