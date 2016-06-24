@@ -12,7 +12,7 @@ var baseBet = 1; // Set your base bet (in Bits)
 var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
 var maximumBet = 100; // Maximum bet the bot will do (in bits).
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
-var minBalance = 500; //The bot will stop when your total balance is lower than this value (in bits)
+var minBalance = 200; //The bot will stop when your total balance is lower than this value (in bits)
 var dryRun = true; // set this to true wil disable the actual betting.
 
 /*
@@ -140,7 +140,7 @@ engine.on('game_starting', function(info) {
 			});
 		}
 	}
-	if((engine.getBalance() / 100) < (minBalance * 100)){
+	if((engine.getBalance() / 100) < minBalance){
     		console.warn('[WARN] Balance lower than minimum balance! stopping bot now...');
     		engine.stop();
 	}
@@ -179,6 +179,8 @@ engine.on('game_starting', function(info) {
     }else { // Otherwise if win or first game:
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
 		// Update bet.
+		newBaseSatoshi = baseBet * 100;
+		baseSatoshi = newBaseSatoshi;
 		currentBet = baseSatoshi; // in Satoshi
 		currentMultiplier = baseMultiplier;
     }
