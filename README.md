@@ -5,7 +5,7 @@ Want to make a commit to the repository?
 Great! But please use the `dev` branch for that :)  
 Want me to keep making the bot better and better?  
 Then please send some bits to "FinlayDaG33k" (without the quotes),  
-It will help looking for alternative strategies as I don't have to pay all losses myself (I am on a very tigh budget already)
+It will help looking for alternative strategies as I don't have to pay all losses myself (and I will lose a lot for sure and I am on a very tigh budget already)
 
 #Todo
 - [ ] Notify the user when a loss-streak happened
