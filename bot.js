@@ -8,9 +8,8 @@ If you decide to make a contribution, please don't forget to change the version 
 */
 
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseBet = 10; // In bits, is not used if variable mode is enabled.
+var baseBet = 1; // Set your base bet (in Bits)
 var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
-var variableBase = true; // Enable variable mode (very experimental)
 var maximumBet = 100; // Maximum bet the bot will do (in bits).
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
 var minBalance = 500; //The bot will stop when your total balance is lower than this value (in bits)
@@ -42,7 +41,7 @@ var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
 var streakSecurity = 10;
-var variablestreakSecurity = 10;
+var variableStreakSecurity = 0;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -56,7 +55,7 @@ function streakSecurityCalculator(bet,calcstreakSecurity){
 	var streakSecuritytotalLosses = 0;
 	var streakSecurityCalculator_currentbet = bet;
 	var FoundstreakSecurity = 0;
-	for(i2 = 0; i2 <= calcstreakSecurity; i2++){
+	for(i2 = 1; i2 <= calcstreakSecurity; i2++){
 		console.log('loss #' + i2);
 		streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
 		streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet * 4;
@@ -64,9 +63,11 @@ function streakSecurityCalculator(bet,calcstreakSecurity){
 		console.log('next Bet: ' + streakSecurityCalculator_currentbet);
 		if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) < (engine.getBalance() / 100)){
 			console.log(i2+ ' losses should be survivable');
-			FoundstreakSecurity = i2;
+			if(!(streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > 1000000){
+				FoundstreakSecurity = i2;
+			}
 		}else if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > (engine.getBalance() / 100)){
-			console.log(i2+ ' losses should not be survivable');
+			console.log(i2+ ' losses is not survivable');
 		}
 		
 	}
@@ -84,15 +85,14 @@ console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.24.8 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
+console.log('Trying to test for a suitable streakSecurity');
+console.log('Basebet is ' + baseBet);
+// This piece is not finished yet, but should calculate the maximum streak security.
+variableStreakSecurity = streakSecurityCalculator(baseBet, streakSecurity);
 
-if (variableBase) {
-      	console.warn('[WARN] Variable mode is enabled and not fully tested. Bot is resillient to ' + streakSecurity + '-loss streaks.');
-	console.log('Trying to test for a suitable streakSecurity');
-	newBaseBet = 1;	
-	console.log('Setting basebet to ' + newBaseBet);
-	// This piece is not finished yet, but should calculate the maximum streak security.
-	console.log(streakSecurityCalculator(newBaseBet, streakSecurity));
-	variablestreakSecurity = streakSecurityCalculator(newBaseBet, streakSecurity);
+if(variableStreakSecurity >= 3){
+	console.warn('[WARN] Bot can\'t resist atleast 3 losses in a row! for safety, bot wil now deactivate');
+	engine.stop();
 }
 
 if(dryRun == true){
@@ -168,31 +168,16 @@ engine.on('game_starting', function(info) {
 			lastLoss /= 4;
 		}
 	
-	        if (lossStreak > streakSecurity) { // If we're on a loss streak, wait a few games!
+	        if (lossStreak > variableStreakSecurity) { // If we're on a loss streak, wait a few games!
 			coolingDown = true;
 			return;
 	    	}
-
+	    	
+	    	
 		currentBet *= 4; // Then multiply base bet by 4!
 		currentMultiplier = 1 + (totalLosses / currentBet);
     }else { // Otherwise if win or first game:
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
-			if (variableBase) { // If variable bet enabled.
-				// Variable mode resists (currently) 1 loss, by making sure you have enough to cover the base and the 4x base bet.
-				var divider = 100;
-				for (i = 0; i < variablestreakSecurity; i++) {
-					divider += (100 * Math.pow(4, (i + 1)));
-				}
-			
-				newBaseBet = Math.min(Math.max(1, Math.floor(engine.getBalance() / divider)), maximumBet * 100); // In bits
-				newBaseSatoshi = newBaseBet * 100;
-
-				if ((newBaseBet != baseBet) || (newBaseBet == 1)) {
-					console.log('[Bot] Variable mode has changed base bet to: ' + newBaseBet + ' bits');
-					baseBet = newBaseBet;
-					baseSatoshi = newBaseSatoshi;
-				}
-			}
 		// Update bet.
 		currentBet = baseSatoshi; // in Satoshi
 		currentMultiplier = baseMultiplier;
