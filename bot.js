@@ -11,7 +11,7 @@ If you decide to make a contribution, please don't forget to change the version 
 var baseBet = 10; // In bits, is not used if variable mode is enabled.
 var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
 var variableBase = true; // Enable variable mode (very experimental)
-var maximumBet = 99999; // Maximum bet the bot will do (in bits).
+var maximumBet = 100; // Maximum bet the bot will do (in bits).
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
 var minBalance = 500; //The bot will stop when your total balance is lower than this value (in bits)
 var dryRun = true; // set this to true wil disable the actual betting.
@@ -41,7 +41,8 @@ var lastBonus = '';
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
-var streakSecurity = 9;
+var streakSecurity = 10;
+var variablestreakSecurity = 10;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -54,23 +55,22 @@ if(typeof jQuery === "undefined"){
 function streakSecurityCalculator(bet,calcstreakSecurity){
 	var streakSecuritytotalLosses = 0;
 	var streakSecurityCalculator_currentbet = bet;
-	for(i2 = 1; i2 <= calcstreakSecurity; i2++){
-		if(i2 >= 2){
-			console.log('loss #' + i2);
-			streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
-			streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet * 4;
-			console.log('total Losses: ' + streakSecuritytotalLosses);
-			console.log('next Bet: ' + streakSecurityCalculator_currentbet);
-			
-		}else{
-			console.log('loss #' + i2);
-			streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet;
-			streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
-			console.log('total Losses: ' + streakSecuritytotalLosses);
-			console.log('next Bet: ' + streakSecurityCalculator_currentbet);
+	var FoundstreakSecurity = 0;
+	for(i2 = 0; i2 <= calcstreakSecurity; i2++){
+		console.log('loss #' + i2);
+		streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
+		streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet * 4;
+		console.log('total Losses: ' + streakSecuritytotalLosses);
+		console.log('next Bet: ' + streakSecurityCalculator_currentbet);
+		if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) < (engine.getBalance() / 100)){
+			console.log(i2+ ' losses should be survivable');
+			FoundstreakSecurity = i2;
+		}else if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > (engine.getBalance() / 100)){
+			console.log(i2+ ' losses should not be survivable');
 		}
+		
 	}
-	return streakSecuritytotalLosses;
+	return FoundstreakSecurity;
 }
 
 // now create an iFrames to support the development of this bot (please disable adblockers if you want to support me!)
@@ -80,9 +80,10 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.23.21 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.24.8 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
+
 
 if (variableBase) {
       	console.warn('[WARN] Variable mode is enabled and not fully tested. Bot is resillient to ' + streakSecurity + '-loss streaks.');
@@ -91,6 +92,7 @@ if (variableBase) {
 	console.log('Setting basebet to ' + newBaseBet);
 	// This piece is not finished yet, but should calculate the maximum streak security.
 	console.log(streakSecurityCalculator(newBaseBet, streakSecurity));
+	variablestreakSecurity = streakSecurityCalculator(newBaseBet, streakSecurity);
 }
 
 if(dryRun == true){
@@ -138,6 +140,10 @@ engine.on('game_starting', function(info) {
 			});
 		}
 	}
+	if((engine.getBalance() / 100) < (minBalance * 100)){
+    		console.warn('[WARN] Balance lower than minimum balance! stopping bot now...');
+    		engine.stop();
+	}
 	
 	if (engine.getBalance() >= (maxBalance * 100)) {
 		engine.stop();
@@ -174,7 +180,7 @@ engine.on('game_starting', function(info) {
 			if (variableBase) { // If variable bet enabled.
 				// Variable mode resists (currently) 1 loss, by making sure you have enough to cover the base and the 4x base bet.
 				var divider = 100;
-				for (i = 0; i < streakSecurity; i++) {
+				for (i = 0; i < variablestreakSecurity; i++) {
 					divider += (100 * Math.pow(4, (i + 1)));
 				}
 			
@@ -201,11 +207,7 @@ engine.on('game_starting', function(info) {
     // Message and set first game to false to be sure.
     console.log('[Bot] Betting ' + (currentBet / 100) + ' bits, cashing out at ' + currentMultiplier + 'x');
     firstGame = false;
-    
-    if((engine.getBalance() / 100) < (minBalance * 100)){
-    	console.warn('[WARN] Balance lower than minimum balance! stopping bot now...');
-    	engine.stop();
-    }
+   
 
     if (currentBet <= engine.getBalance()){ // Ensure we have enough to bet
 		if (currentBet > (maximumBet * 100)) { // Ensure you only bet the maximum.
