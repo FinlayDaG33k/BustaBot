@@ -65,14 +65,14 @@ engine.on('game_starting', function(info) {
 
 	
 	if(sendNotifications == true){
+		if(lastBonus == undefined){
+			lastBonus = 0;
+		}
+		var bonusProfit = ((currentBet / 100) * (lastBonus / 100));
 		if (engine.lastGamePlay() == 'WON') { // If we won the last game:
-			if(lastBonus == undefined){
-				lastBonus = 0;
-			}
-			var bonusProfit = ((currentBet / 100) * (lastBonus / 100));
 			var notifyProfit = (((currentBet / 100) * cashedOut) + bonusProfit) - (currentBet / 100);
 		}else if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If we lost the last game:
-			var notifyProfit = -Math.abs(currentBet / 100);
+			var notifyProfit = -Math.abs((currentBet / 100) + bonusProfit);
 		}
 		if(!firstGame){
 			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
