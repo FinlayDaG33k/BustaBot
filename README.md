@@ -10,8 +10,8 @@ It will help looking for alternative strategies as I don't have to pay all losse
 #Todo
 - [ ] Notify the user when a loss-streak happened
 - [ ] Notify user if their bot has became in-active
-- [x] Update profit calculations (bot doesn't seem to correctly calculate the profit to the Telegram Part)
-- [x] Turn off the bot if 4 consecutive losses can't be survived
+- [ ] Update profit calculations (bot doesn't seem to correctly calculate the profit to the Telegram Part)
+- [ ] Turn off the bot if 4 consecutive losses can't be survived
 
 # Donators
 | BaB name  | Amount |
