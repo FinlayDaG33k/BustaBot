@@ -78,6 +78,7 @@ variableStreakSecurity = streakSecurityCalculator(baseBet, streakSecurity);
 
 if(variableStreakSecurity >= 4){
 	console.warn('[WARN] Bot can\'t resist atleast 4 losses in a row! for safety, bot wil now deactivate');
+	console.warn('Please add more balance to your account, or lower your baseBet (if possible)');
 	engine.stop();
 }
 
