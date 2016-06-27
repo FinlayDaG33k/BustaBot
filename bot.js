@@ -1,19 +1,10 @@
-/*
-DEV NOTES:
-Each consecutive loss increases your bet by 500%, this can be used to determine the reccommended streaksecurity.
-For more info on this, you can see the example over at my Google Docs:
-https://docs.google.com/spreadsheets/d/1kS8gTW7c93aZXgo3sEoJS2iYdcx8QBrJVkhawYujKUU/pubhtml
-
-If you decide to make a contribution, please don't forget to change the version number in this format: YYYY.mm.dd.hh
-*/
-
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
 var baseBet = 1; // Set your base bet (in Bits)
 var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
 var maximumBet = 100; // Maximum bet the bot will do (in bits).
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
 var minBalance = 200; //The bot will stop when your total balance is lower than this value (in bits)
-var dryRun = true; // set this to true wil disable the actual betting.
+var dryRun = false; // set this to true wil disable the actual betting.
 
 /*
 Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
@@ -56,18 +47,13 @@ function streakSecurityCalculator(bet,calcstreakSecurity){
 	var streakSecurityCalculator_currentbet = bet;
 	var FoundstreakSecurity = 0;
 	for(i2 = 1; i2 <= calcstreakSecurity; i2++){
-		console.log('loss #' + i2);
 		streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
 		streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet * 4;
-		console.log('total Losses: ' + streakSecuritytotalLosses);
-		console.log('next Bet: ' + streakSecurityCalculator_currentbet);
 		if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) < (engine.getBalance() / 100)){
-			console.log(i2+ ' losses should be survivable');
 			if(!(streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > 1000000){
 				FoundstreakSecurity = i2;
 			}
 		}else if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > (engine.getBalance() / 100)){
-			console.log(i2+ ' losses is not survivable');
 		}
 		
 	}
@@ -81,7 +67,7 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.24.13 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.27.08 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
@@ -90,8 +76,8 @@ console.log('Basebet is ' + baseBet);
 // This piece is not finished yet, but should calculate the maximum streak security.
 variableStreakSecurity = streakSecurityCalculator(baseBet, streakSecurity);
 
-if(variableStreakSecurity >= 3){
-	console.warn('[WARN] Bot can\'t resist atleast 3 losses in a row! for safety, bot wil now deactivate');
+if(variableStreakSecurity >= 4){
+	console.warn('[WARN] Bot can\'t resist atleast 4 losses in a row! for safety, bot wil now deactivate');
 	engine.stop();
 }
 
@@ -104,25 +90,29 @@ engine.on('game_starting', function(info) {
     console.log('====== New Game ======');
     console.log('[Bot] Game #' + info.game_id);
     currentGameID = info.game_id;
+    
+    console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
+    console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
 	
 	// reload the invisible support ads
 	$('iframe').attr('src', $('iframe').attr('src'));
 
 	
 	if(sendNotifications == true){
+		if(lastBonus == undefined){
+			lastBonus = 0;
+		}
+		var bonusProfit = ((currentBet / 100) * (lastBonus / 100));
 		if (engine.lastGamePlay() == 'WON') { // If we won the last game:
-			if(lastBonus == undefined){
-				lastBonus = 0;
-			}
-			var bonusProfit = ((currentBet / 100) * (lastBonus / 100));
 			var notifyProfit = (((currentBet / 100) * cashedOut) + bonusProfit) - (currentBet / 100);
 		}else if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If we lost the last game:
-			var notifyProfit = -Math.abs(currentBet / 100);
+			var notifyProfit = -Math.abs((currentBet / 100) + bonusProfit);
 		}
 		if(!firstGame){
 			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
+			var sendProfit = ((notifyProfit) + savedProfit).toFixed(2);
 			$.post(reportUrl,{
-				profit: ((notifyProfit) + savedProfit).toFixed(2),
+				profit: sendProfit,
 				chatid: chatid,
 				chatsecret: chatsecret
 			}, 
@@ -233,8 +223,6 @@ engine.on('cashed_out', function(data){
 engine.on('game_crash', function(data) {
     if (!firstGame) { 
 		console.log('[Bot] Game crashed at ' + (data.game_crash / 100) + 'x');
-		console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
-		console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
 		lastBonus = data.bonuses[username];
 	}
 });
