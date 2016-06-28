@@ -13,6 +13,7 @@ It will help looking for alternative strategies as I don't have to pay all losse
 - [x] Update profit calculations (bot doesn't seem to correctly calculate the profit to the Telegram Part)
 - [x] Turn off the bot if 4 consecutive losses can't be survived
 - [ ] Add multiple game modes (D'Alembert for example)
+- [ ] Fix bug where last bet wouldn't get multiplied by 4 to recover loss.
 
 # Donators
 | BaB name  | Amount |
