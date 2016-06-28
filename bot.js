@@ -1,3 +1,9 @@
+/*
+DEV NOTES:
+This version does calculate the streakSecurity properly, HOWEVER, it lockes up the browser when the balances become bigger.
+This will be fixed ASAP
+*/
+
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
 var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
