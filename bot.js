@@ -67,7 +67,7 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.27.08 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.28.08 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
@@ -78,6 +78,7 @@ variableStreakSecurity = streakSecurityCalculator(baseBet, streakSecurity);
 
 if(variableStreakSecurity >= 4){
 	console.warn('[WARN] Bot can\'t resist atleast 4 losses in a row! for safety, bot wil now deactivate');
+	console.warn('Please add more balance to your account, or lower your baseBet (if possible)');
 	engine.stop();
 }
 
@@ -106,7 +107,7 @@ engine.on('game_starting', function(info) {
 		if (engine.lastGamePlay() == 'WON') { // If we won the last game:
 			var notifyProfit = (((currentBet / 100) * cashedOut) + bonusProfit) - (currentBet / 100);
 		}else if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If we lost the last game:
-			var notifyProfit = -Math.abs((currentBet / 100) + bonusProfit);
+			var notifyProfit = -Math.abs((currentBet / 100) - bonusProfit);
 		}
 		if(!firstGame){
 			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
