@@ -1,9 +1,3 @@
-/*
-DEV NOTES:
-This version does calculate the streakSecurity properly, HOWEVER, it lockes up the browser when the balances become bigger.
-This will be fixed ASAP
-*/
-
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
 var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
@@ -37,8 +31,6 @@ var lastBonus = '';
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
-var streakSecurity = 10;
-var variableStreakSecurity = 0;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -48,28 +40,22 @@ if(typeof jQuery === "undefined"){
 	document.documentElement.firstChild.appendChild(script) // now append the script into HEAD, it will fetch and be executed
 }
 
-function Calculator(bet, calcstreakSecurity){
+function Calculator(balance){
 	var streakSecuritytotalLosses = 0;
-	for(i = 1; i <= bet; i++){
-		var FoundstreakSecurity = 0;
-		var streakSecurityCalculator_currentbet = i;
-		for(i2 = 1; i2 <= calcstreakSecurity; i2++){
-			console.log('Testing ' + i + ' Bits with ' + i2 + ' Losses');
-			streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
-			streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet * 4;
-			if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) < bet){
-				if(!(streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > 1000000){
-					console.log(i2 + ' Losses if survivable with a bet of ' + i2);
-					FoundstreakSecurity = i2;
-				}
-			}else if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > bet){
-				console.log(i2 + ' Losses is not survivable with a bet of ' + i2);
-				console.log('Required Bits: ' + streakSecuritytotalLosses);
-				break;
-			}	
-		}
-	}
-	return;
+	var streakSecurityCalculator_currentbet = 1;
+	var maxConsecutiveLosses = 0;
+    	for(i = 1; i <= 10; i++){
+        	streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
+            	streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet * 4;
+            	if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) < balance){
+                	if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) <= 1000000){
+				maxConsecutiveLosses = i;
+                	}
+            	}else if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > balance){
+                	break;
+            	}
+    	}
+	return maxConsecutiveLosses
 }
 
 // now create an iFrames to support the development of this bot (please disable adblockers if you want to support me!)
@@ -86,8 +72,9 @@ console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bi
 console.log('Trying to test for a suitable streakSecurity');
 console.log('Basebet is ' + baseBet);
 // This piece is not finished yet, but should calculate the maximum streak security.
+var maxLossstreak = Calculator((startBalance / 100));
 
-var calculator = Calculator((startBalance / 100), streakSecurity);
+console.log('I should survive' +  maxLossstreak + 'Consecutive losses.');
 
 
 //variableStreakSecurity = streakSecurityCalculator(baseBet, streakSecurity);
@@ -171,7 +158,7 @@ engine.on('game_starting', function(info) {
 			lastLoss /= 4;
 		}
 	
-	        if (lossStreak > variableStreakSecurity) { // If we're on a loss streak, wait a few games!
+	        if (lossStreak > maxLossstreak) { // If we're on a loss streak, wait a few games!
 			coolingDown = true;
 			return;
 	    	}
