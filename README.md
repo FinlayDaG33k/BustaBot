@@ -11,9 +11,10 @@ It will help looking for alternative strategies as I don't have to pay all losse
 - [ ] Notify the user when a loss-streak happened
 - [ ] Notify user if their bot has became in-active
 - [x] Update profit calculations (bot doesn't seem to correctly calculate the profit to the Telegram Part)
-- [x] Turn off the bot if 4 consecutive losses can't be survived
+- [ ] Turn off the bot if 4 consecutive losses can't be survived
 - [ ] Add multiple game modes (D'Alembert for example)
 - [ ] Fix bug where last bet wouldn't get multiplied by 4 to recover loss.
+- [ ] Disable messages of placed bet when DryRun is enabled.
 
 # Donators
 | BaB name  | Amount |
