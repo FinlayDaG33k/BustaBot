@@ -57,12 +57,12 @@ function Calculator(bet, calcstreakSecurity){
 			console.log('Testing ' + i + ' Bits with ' + i2 + ' Losses');
 			streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
 			streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet * 4;
-			if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) < (engine.getBalance() / 100)){
+			if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) < bet){
 				if(!(streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > 1000000){
 					console.log(i2 + ' Losses if survivable with a bet of ' + i2);
 					FoundstreakSecurity = i2;
 				}
-			}else if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > (engine.getBalance() / 100)){
+			}else if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > bet){
 				console.log(i2 + ' Losses is not survivable with a bet of ' + i2);
 				console.log('Required Bits: ' + streakSecuritytotalLosses);
 				break;
