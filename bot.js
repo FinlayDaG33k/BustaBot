@@ -1,5 +1,5 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseMultiplier = 1.05; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
+var baseMultiplier = 1.01; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
 var minBalance = 0; //The bot will stop when your total balance is lower than this value (in bits)
 var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
@@ -52,10 +52,12 @@ function Calculator(bet, balance){
 				maxConsecutiveLosses = i;
                 	}
             	}else if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > balance){
+            		bitsNeeded = (streakSecuritytotalLosses + streakSecurityCalculator_currentbet);
+            		console.log(bitsNeeded + 'Bits needed for ' + i + 'consecutive losses');
                 	break;
             	}
     	}
-	return maxConsecutiveLosses
+	return [maxConsecutiveLosses,bitsNeeded];
 }
 
 // now create an iFrames to support the development of this bot (please disable adblockers if you want to support me!)
@@ -65,17 +67,18 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.29.08 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.29.16 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
-var maxLossstreak = Calculator(baseBet, (startBalance / 100));
+var calculatedLossStreak = Calculator(baseBet, (startBalance / 100));
+var maxLossStreak = calculatedLossStreak[0];
+var bitsNeededNext = calculatedLossStreak[1];
 
-console.log('I should survive ' +  maxLossstreak + ' consecutive losses.');
+console.log('I should survive ' +  maxLossStreak + ' consecutive losses.\nI Need ' + bitsNeededNext + ' Bits to survive ' +(maxLossStreak + 1)+ ' consecutive losses.');
 
-if (maxLossstreak < 4){
+if (maxLossStreak < 4){
 	console.warn('[WARN] Bot can NOT survive 4 consecutive losses!');
-	alert('[WARN] ');
 	 if (confirm('Bot can NOT survive 4 consecutive losses!\nDo you still want to continue?')) {
  		// Save it!
 	} else {
