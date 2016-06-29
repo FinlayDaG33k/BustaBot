@@ -1,8 +1,8 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
+var baseMultiplier = 1.05; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
 var minBalance = 0; //The bot will stop when your total balance is lower than this value (in bits)
-var dryRun = true; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
+var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
 
 /*
 Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
@@ -65,7 +65,7 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.28.22 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.29.08 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
