@@ -42,7 +42,7 @@ if(typeof jQuery === "undefined"){
 
 function Calculator(bet, balance){
 	var streakSecuritytotalLosses = 0;
-	var streakSecurityCalculator_currentbet = 1;
+	var streakSecurityCalculator_currentbet = bet;
 	var maxConsecutiveLosses = 0;
     	for(i = 1; i <= 10; i++){
         	streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
