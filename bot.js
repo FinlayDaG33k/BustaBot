@@ -40,7 +40,7 @@ if(typeof jQuery === "undefined"){
 	document.documentElement.firstChild.appendChild(script) // now append the script into HEAD, it will fetch and be executed
 }
 
-function Calculator(balance){
+function Calculator(bet, balance){
 	var streakSecuritytotalLosses = 0;
 	var streakSecurityCalculator_currentbet = 1;
 	var maxConsecutiveLosses = 0;
@@ -69,7 +69,7 @@ console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.29.08 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
-var maxLossstreak = Calculator((startBalance / 100));
+var maxLossstreak = Calculator(baseBet, (startBalance / 100));
 
 console.log('I should survive ' +  maxLossstreak + ' consecutive losses.');
 
