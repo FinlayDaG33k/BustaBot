@@ -69,16 +69,19 @@ console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.28.22 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
-console.log('Trying to test for a suitable streakSecurity');
-console.log('Basebet is ' + baseBet);
-// This piece is not finished yet, but should calculate the maximum streak security.
 var maxLossstreak = Calculator((startBalance / 100));
 
-console.log('I should survive' +  maxLossstreak + 'Consecutive losses.');
+console.log('I should survive ' +  maxLossstreak + ' consecutive losses.');
 
-
-//variableStreakSecurity = streakSecurityCalculator(baseBet, streakSecurity);
-
+if (maxLossstreak < 4){
+	console.warn('[WARN] Bot can NOT survive 4 consecutive losses!');
+	alert('[WARN] ');
+	 if (confirm('Bot can NOT survive 4 consecutive losses!\nDo you still want to continue?')) {
+ 		// Save it!
+	} else {
+ 		engine.stop();
+	}
+}
 
 
 if(dryRun == true){
