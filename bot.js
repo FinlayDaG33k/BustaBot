@@ -1,10 +1,8 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseBet = 1; // Set your base bet (in Bits)
-var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
-var maximumBet = 100; // Maximum bet the bot will do (in bits).
+var baseMultiplier = 1.05; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
-var minBalance = 200; //The bot will stop when your total balance is lower than this value (in bits)
-var dryRun = false; // set this to true wil disable the actual betting.
+var minBalance = 0; //The bot will stop when your total balance is lower than this value (in bits)
+var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
 
 /*
 Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
@@ -17,6 +15,8 @@ var chatid = ''; // Enter your chat ID here. This one can be requested by runnin
 var chatsecret = ''; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
+var maximumBet = 1000000; // Maximum base bet the bot will do (in bits). (Default is 1million bits, as that's the betting limit)
+var baseBet = 1; // Set the base bet (in Bits)
 var baseSatoshi = baseBet * 100; // Calculated
 var currentBet = baseSatoshi;
 var currentMultiplier = baseMultiplier;
@@ -31,8 +31,6 @@ var lastBonus = '';
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
-var streakSecurity = 10;
-var variableStreakSecurity = 0;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -42,22 +40,22 @@ if(typeof jQuery === "undefined"){
 	document.documentElement.firstChild.appendChild(script) // now append the script into HEAD, it will fetch and be executed
 }
 
-function streakSecurityCalculator(bet,calcstreakSecurity){
+function Calculator(balance){
 	var streakSecuritytotalLosses = 0;
-	var streakSecurityCalculator_currentbet = bet;
-	var FoundstreakSecurity = 0;
-	for(i2 = 1; i2 <= calcstreakSecurity; i2++){
-		streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
-		streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet * 4;
-		if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) < (engine.getBalance() / 100)){
-			if(!(streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > 1000000){
-				FoundstreakSecurity = i2;
-			}
-		}else if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > (engine.getBalance() / 100)){
-		}
-		
-	}
-	return FoundstreakSecurity;
+	var streakSecurityCalculator_currentbet = 1;
+	var maxConsecutiveLosses = 0;
+    	for(i = 1; i <= 10; i++){
+        	streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
+            	streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet * 4;
+            	if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) < balance){
+                	if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) <= 1000000){
+				maxConsecutiveLosses = i;
+                	}
+            	}else if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) > balance){
+                	break;
+            	}
+    	}
+	return maxConsecutiveLosses
 }
 
 // now create an iFrames to support the development of this bot (please disable adblockers if you want to support me!)
@@ -67,20 +65,24 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.28.08 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.29.08 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
-console.log('Trying to test for a suitable streakSecurity');
-console.log('Basebet is ' + baseBet);
-// This piece is not finished yet, but should calculate the maximum streak security.
-variableStreakSecurity = streakSecurityCalculator(baseBet, streakSecurity);
+var maxLossstreak = Calculator((startBalance / 100));
 
-if(variableStreakSecurity >= 4){
-	console.warn('[WARN] Bot can\'t resist atleast 4 losses in a row! for safety, bot wil now deactivate');
-	console.warn('Please add more balance to your account, or lower your baseBet (if possible)');
-	engine.stop();
+console.log('I should survive ' +  maxLossstreak + ' consecutive losses.');
+
+if (maxLossstreak < 4){
+	console.warn('[WARN] Bot can NOT survive 4 consecutive losses!');
+	alert('[WARN] ');
+	 if (confirm('Bot can NOT survive 4 consecutive losses!\nDo you still want to continue?')) {
+ 		// Save it!
+	} else {
+ 		engine.stop();
+	}
 }
+
 
 if(dryRun == true){
 	console.warn('[WARN] Dry run mode enabled! no actual betting will happen!');
@@ -159,7 +161,7 @@ engine.on('game_starting', function(info) {
 			lastLoss /= 4;
 		}
 	
-	        if (lossStreak > variableStreakSecurity) { // If we're on a loss streak, wait a few games!
+	        if (lossStreak > maxLossstreak) { // If we're on a loss streak, wait a few games!
 			coolingDown = true;
 			return;
 	    	}
