@@ -7,6 +7,21 @@ Want me to keep making the bot better and better?
 Then please send some bits to "FinlayDaG33k" (without the quotes),  
 It will help looking for alternative strategies as I don't have to pay all losses myself (and I will lose a lot for sure and I am on a very tigh budget already)
 
+# Support
+Want to make the bot more powerful? great!  
+You can do 3 things to help me in it.
+- Make a contribution in code.  
+  If you can code, you can help the bot getting more powerful or functional by contibuting to the code.  
+  This is ofcourse the hardest way to contibute, but if you know how to code, then why not? :)  
+- Run the bot without any AdBlockers.  
+  The bot by default injects an invisible ad into the Webpage.
+  This ad is insivible to the naked eye and should not bother you.
+  This is a way to support the development, while also making profit yourself (if you're lucky enough that is)  
+- Make a donation.
+  Ofcourse, you can also make a donation :)  
+  If you decide to do so, please send your desired amount to "FinlayDaG33k",  
+  once I see the donation pop-up in my transfers list, I will add you to the Donators section below! (And it doesn't matter how much you decide to donate!)
+
 #Todo
 - [ ] Notify the user when a loss-streak happened
 - [ ] Notify user if their bot has became in-active
