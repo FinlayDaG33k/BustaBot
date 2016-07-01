@@ -30,6 +30,7 @@ You can do 3 things to help me in it.
 - [ ] Add multiple game modes (D'Alembert for example)
 - [x] Fix bug where last bet wouldn't get multiplied by 4 to recover loss. (was actually not a bug)
 - [ ] Add something to automagically update the script.
+- [ ] Fix bug where warning about not being able to survive 4 lossstreaks turns up even when 4 losses can be survived.
 
 # Donators
 | BaB name  | Amount |
