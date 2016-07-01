@@ -165,11 +165,7 @@ engine.on('game_starting', function(info) {
 		currentBet *= 4; // Then multiply base bet by 4!
     }else { // Otherwise if win or first game:
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
-		// Update bet.
-		newBaseSatoshi = baseBet * 100;
-		baseSatoshi = newBaseSatoshi;
-		currentBet = baseSatoshi; // in Satoshi
-		currentMultiplier = baseMultiplier;
+		currentBet = baseBet; // in Satoshi
     }
     
         //calculate the biggest losstreak and then show it
