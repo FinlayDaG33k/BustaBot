@@ -1,5 +1,5 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseMultiplier = 1.01; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
+var baseMultiplier = 1.50; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
 var minBalance = 0; //The bot will stop when your total balance is lower than this value (in bits)
 var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
@@ -156,22 +156,13 @@ engine.on('game_starting', function(info) {
     }
 
     if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If last game loss:
-		lossStreak++;
-		var totalLosses = 0; // Total satoshi lost.
-		var lastLoss = currentBet; // Store our last bet.
-		while (lastLoss >= baseSatoshi) { // Until we get down to base bet, add the previous losses.
-			totalLosses += lastLoss;
-			lastLoss /= 4;
-		}
-	
-	        if (lossStreak > maxLossstreak) { // If we're on a loss streak, wait a few games!
+		if (lossStreak > 4) { // If we're on a loss streak, wait a few games!
 			coolingDown = true;
 			return;
-	    	}
-	    	
-	    	
+		}
+		lossStreak++;    	
+	    
 		currentBet *= 4; // Then multiply base bet by 4!
-		currentMultiplier = 1 + (totalLosses / currentBet);
     }else { // Otherwise if win or first game:
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
 		// Update bet.
