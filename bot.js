@@ -1,5 +1,5 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseMultiplier = 1.50; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
+var baseMultiplier = 1.05; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
 var minBalance = 0; //The bot will stop when your total balance is lower than this value (in bits)
 var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
@@ -46,7 +46,7 @@ function Calculator(bet, balance){
 	var maxConsecutiveLosses = 0;
     	for(i = 1; i <= 10; i++){
         	streakSecuritytotalLosses = streakSecuritytotalLosses + streakSecurityCalculator_currentbet;
-            	streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet * 4;
+            	streakSecurityCalculator_currentbet = streakSecurityCalculator_currentbet * 19;
             	if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) < balance){
                 	if((streakSecuritytotalLosses + streakSecurityCalculator_currentbet) <= 1000000){
 				maxConsecutiveLosses = i;
@@ -77,7 +77,7 @@ var bitsNeededNext = calculatedLossStreak[1];
 
 console.log('I should survive ' +  maxLossStreak + ' consecutive losses.\nI Need ' + bitsNeededNext + ' Bits to survive ' +(maxLossStreak + 1)+ ' consecutive losses.');
 
-if (maxLossStreak < 4){
+if (maxLossStreak < 3){
 	console.warn('[WARN] Bot can NOT survive 4 consecutive losses!');
 	 if (confirm('Bot can NOT survive 4 consecutive losses!\nDo you still want to continue?')) {
  		// Save it!
@@ -162,10 +162,10 @@ engine.on('game_starting', function(info) {
 		}
 		lossStreak++;    	
 	    
-		currentBet *= 4; // Then multiply base bet by 4!
+		currentBet *= 19; // Then multiply base bet by 4!
     }else { // Otherwise if win or first game:
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
-		currentBet = baseBet; // in Satoshi
+		currentBet = (baseBet * 100); // in Satoshi
     }
     
         //calculate the biggest losstreak and then show it
