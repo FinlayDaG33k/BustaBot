@@ -1,4 +1,5 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
+var baseBet = 1; // Set the base bet (in Bits, 10 reccommended)
 var baseMultiplier = 1.05; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
 var minBalance = 0; //The bot will stop when your total balance is lower than this value (in bits)
@@ -16,7 +17,6 @@ var chatsecret = ''; // Enter your chat secret here. This one can be requested b
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
 var maximumBet = 1000000; // Maximum base bet the bot will do (in bits). (Default is 1million bits, as that's the betting limit)
-var baseBet = 1; // Set the base bet (in Bits)
 var baseSatoshi = baseBet * 100; // Calculated
 var currentBet = baseSatoshi;
 var currentMultiplier = baseMultiplier;
