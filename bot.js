@@ -1,20 +1,22 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseBet = 10; // In bits, is not used if variable mode is enabled.
-var baseMultiplier = 1.10; // Target multiplier: 1.10 (normal) or 1.05 (safe) recommended, going higher might be risky.
-var variableBase = true; // Enable variable mode (very experimental)
-var maximumBet = 99999; // Maximum bet the bot will do (in bits).
-var streakSecurity = 5; // Number of loss-streak you wanna be safe for. (Reccommended is 3+)
-var maxBalance = 50000; //The bot will stop when your total balance is higher that this value (in bits).
+var baseBet = 1; // Set the base bet (in Bits), For a baseBet of 1, we reccommend having atleast 7240 Bits, althou 381 is the minumum (but risky).
+var baseMultiplier = 1.05; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
+var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
+var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
 
-// Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
-// The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
-// If you want to use the notifications, you need to register yourself with the telegram bot at:
-// http://telegram.me/FDGbusta_bot
+/*
+Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
+The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
+If you want to use the notifications, you need to register yourself with the telegram bot at:
+http://telegram.me/FDGbusta_bot
+*/
 var sendNotifications = false;
 var chatid = ''; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
 var chatsecret = ''; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
+var minBalance = 7240 * baseBet; //Bot will stop when balance becomes lower than this value. This is dynamically recalculated based on your baseBet.
+var maximumBet = 1000000; // Maximum base bet the bot will do (in bits). (Default is 1million bits, as that's the betting limit)
 var baseSatoshi = baseBet * 100; // Calculated
 var currentBet = baseSatoshi;
 var currentMultiplier = baseMultiplier;
@@ -45,20 +47,31 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.06.22.16.55 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.03.18 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
-if (variableBase) {
-      console.warn('[WARN] Variable mode is enabled and not fully tested. Bot is resillient to ' + streakSecurity + '-loss streaks.');
+if (minBalance >= engine.getBalance()){
+	console.warn('[WARN] Bot can NOT survive 4 consecutive losses!');
+	 if (confirm('Bot can NOT survive 4 consecutive losses!\nDo you still want to continue?')) {
+	} else {
+ 		engine.stop();
+	}
 }
 
 
-// On a game starting, place the bet.
+if(dryRun == true){
+	console.warn('[WARN] Dry run mode enabled! no actual betting will happen!');
+}
+
+// On a game starting
 engine.on('game_starting', function(info) {
     console.log('====== New Game ======');
     console.log('[Bot] Game #' + info.game_id);
     currentGameID = info.game_id;
+    
+    console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
+    console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
 	
 	// reload the invisible support ads
 	$('iframe').attr('src', $('iframe').attr('src'));
@@ -72,12 +85,13 @@ engine.on('game_starting', function(info) {
 		if (engine.lastGamePlay() == 'WON') { // If we won the last game:
 			var notifyProfit = (((currentBet / 100) * cashedOut) + bonusProfit) - (currentBet / 100);
 		}else if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If we lost the last game:
-			var notifyProfit = -Math.abs((currentBet / 100) + bonusProfit);
+			var notifyProfit = -Math.abs((currentBet / 100) - bonusProfit);
 		}
 		if(!firstGame){
 			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
+			var sendProfit = ((notifyProfit) + savedProfit).toFixed(2);
 			$.post(reportUrl,{
-				profit: ((notifyProfit) + savedProfit).toFixed(2),
+				profit: sendProfit,
 				chatid: chatid,
 				chatsecret: chatsecret
 			}, 
@@ -95,8 +109,13 @@ engine.on('game_starting', function(info) {
 			});
 		}
 	}
+	if((engine.getBalance() / 100) <= minBalance){
+    		console.warn('[WARN] Balance lower than minimum required balance! stopping bot now...');
+    		engine.stop();
+	}
 	
-	if (engine.getBalance() >= (maxBalance * 100)) {
+	if ((engine.getBalance() / 100) >= maxBalance) {
+		console.warn('[WARN] Balance higher than maximum balance! stopping bot now...');
 		engine.stop();
 	}
 
@@ -111,42 +130,16 @@ engine.on('game_starting', function(info) {
     }
 
     if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If last game loss:
-		lossStreak++;
-		var totalLosses = 0; // Total satoshi lost.
-		var lastLoss = currentBet; // Store our last bet.
-		while (lastLoss >= baseSatoshi) { // Until we get down to base bet, add the previous losses.
-			totalLosses += lastLoss;
-			lastLoss /= 4;
-		}
-	
-	        if (lossStreak > streakSecurity) { // If we're on a loss streak, wait a few games!
+		if (lossStreak > 4) { // If we're on a loss streak, wait a few games!
 			coolingDown = true;
 			return;
-	    	}
-
-		currentBet *= 4; // Then multiply base bet by 4!
-		currentMultiplier = 1 + (totalLosses / currentBet);
+		}
+		lossStreak++;    	
+	    
+		currentBet *= 19; // Then multiply base bet by 4!
     }else { // Otherwise if win or first game:
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
-			if (variableBase) { // If variable bet enabled.
-				// Variable mode resists (currently) 1 loss, by making sure you have enough to cover the base and the 4x base bet.
-				var divider = 100;
-				for (i = 0; i < streakSecurity; i++) {
-					divider += (100 * Math.pow(4, (i + 1)));
-				}
-			
-				newBaseBet = Math.min(Math.max(1, Math.floor(engine.getBalance() / divider)), maximumBet * 100); // In bits
-				newBaseSatoshi = newBaseBet * 100;
-
-				if ((newBaseBet != baseBet) || (newBaseBet == 1)) {
-					console.log('[Bot] Variable mode has changed base bet to: ' + newBaseBet + ' bits');
-					baseBet = newBaseBet;
-					baseSatoshi = newBaseSatoshi;
-				}
-			}
-		// Update bet.
-		currentBet = baseSatoshi; // in Satoshi
-		currentMultiplier = baseMultiplier;
+		currentBet = (baseBet * 100); // in Satoshi
     }
     
         //calculate the biggest losstreak and then show it
@@ -158,13 +151,16 @@ engine.on('game_starting', function(info) {
     // Message and set first game to false to be sure.
     console.log('[Bot] Betting ' + (currentBet / 100) + ' bits, cashing out at ' + currentMultiplier + 'x');
     firstGame = false;
+   
 
     if (currentBet <= engine.getBalance()){ // Ensure we have enough to bet
 		if (currentBet > (maximumBet * 100)) { // Ensure you only bet the maximum.
 			console.warn('[Warn] Bet size exceeds maximum bet, lowering bet to ' + (maximumBet * 100) + ' bits');
 			currentBet = maximumBet;
 		}
-		engine.placeBet(currentBet, Math.round(currentMultiplier * 100), false);
+		if(dryRun == false){
+			engine.placeBet(currentBet, Math.round(currentMultiplier * 100), false);
+		}
     }else{ // Otherwise insufficent funds...
 		if (engine.getBalance() < 100) {
 			console.error('[Bot] Insufficent funds to do anything... stopping');
@@ -194,8 +190,6 @@ engine.on('cashed_out', function(data){
 engine.on('game_crash', function(data) {
     if (!firstGame) { 
 		console.log('[Bot] Game crashed at ' + (data.game_crash / 100) + 'x');
-		console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
-		console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
 		lastBonus = data.bonuses[username];
 	}
 });
