@@ -1,6 +1,6 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
 var baseBet = 1; // Set the base bet (in Bits), For a baseBet of 1, we reccommend having atleast 7240 Bits, althou 381 is the minumum (but risky).
-var baseMultiplier = 1.05; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
+var baseMultiplier = 1.04; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
 var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
 
