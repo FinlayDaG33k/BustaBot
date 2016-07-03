@@ -33,6 +33,9 @@ You can do 3 things to help me in it.
 - [ ] Fix bug where warning about not being able to survive 4 lossstreaks turns up even when 4 losses can be survived.
 
 #Verified Users
+Below is a list of a few Verified users.  
+Want to be in this list as well? message me a screenshot of the bot, and mail it to me: [contact@finlaydag33k.nl](mailto:contact@finlaydag33k.nl)  
+  
 - [Toevca](https://www.bustabit.com/user/toevca)
 
 # Donators
