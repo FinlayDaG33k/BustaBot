@@ -52,11 +52,8 @@ console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
 if (minBalance >= engine.getBalance()){
-	console.warn('[WARN] Bot can NOT survive 4 consecutive losses!');
-	 if (confirm('Bot can NOT survive 4 consecutive losses!\nDo you still want to continue?')) {
-	} else {
- 		engine.stop();
-	}
+	console.warn('[WARN] Bot can NOT survive 4 consecutive losses!\nFor safety reasons, the bot will now stop.');
+ 	engine.stop();
 }
 
 
