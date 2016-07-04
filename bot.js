@@ -85,7 +85,6 @@ engine.on('game_starting', function(info) {
 			var notifyProfit = (-Math.abs(currentBet / 100)) + bonusProfit;
 		}
 		if(!firstGame){
-			console.log(notifyProfit);
 			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
 			var sendProfit = ((notifyProfit) + savedProfit).toFixed(2);
 			$.post(reportUrl,{
