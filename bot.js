@@ -1,8 +1,7 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseBet = 1; // Set the base bet (in Bits), For a baseBet of 1, we reccommend having atleast 7240 Bits, althou 381 is the minumum (but risky).
+var baseBet = 1; // Set the base bet (in Bits)
 var baseMultiplier = 1.04; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
-var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
 
 /*
 Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
@@ -15,7 +14,8 @@ var chatid = ''; // Enter your chat ID here. This one can be requested by runnin
 var chatsecret = ''; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
-var minBalance = 7240 * baseBet; //Bot will stop when balance becomes lower than this value. This is dynamically recalculated based on your baseBet.
+var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
+var minBalance = 421 * baseBet; //Bot will stop when balance becomes lower than this value. This is dynamically recalculated based on your baseBet.
 var maximumBet = 1000000; // Maximum base bet the bot will do (in bits). (Default is 1million bits, as that's the betting limit)
 var baseSatoshi = baseBet * 100; // Calculated
 var currentBet = baseSatoshi;
@@ -47,7 +47,7 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.03.18 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.04.10 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
@@ -78,13 +78,14 @@ engine.on('game_starting', function(info) {
 		if(lastBonus == undefined){
 			lastBonus = 0;
 		}
-		var bonusProfit = ((currentBet / 100) * (lastBonus / 100));
+		var bonusProfit = ((currentBet / 100) * (lastBonus / 1000));
 		if (engine.lastGamePlay() == 'WON') { // If we won the last game:
 			var notifyProfit = (((currentBet / 100) * cashedOut) + bonusProfit) - (currentBet / 100);
 		}else if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If we lost the last game:
-			var notifyProfit = -Math.abs((currentBet / 100) - bonusProfit);
+			var notifyProfit = (-Math.abs(currentBet / 100)) + bonusProfit;
 		}
 		if(!firstGame){
+			console.log(notifyProfit);
 			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
 			var sendProfit = ((notifyProfit) + savedProfit).toFixed(2);
 			$.post(reportUrl,{

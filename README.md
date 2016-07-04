@@ -41,5 +41,6 @@ Want to be in this list as well? message me a screenshot of the bot, and mail it
 # Donators
 | BaB name  | Amount |
 | ------------- | ------------- |
+| Toevca  | 20,000.00  |
 | Juddz96  | 10,000.00  |
 | KruppesNL  | 300.00  |
