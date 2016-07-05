@@ -1,5 +1,5 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseBet = 1; // Set the base bet (in Bits)
+var baseBet = 10; // Set the base bet (in Bits), For a baseBet of 1, we reccommend having atleast 7240 Bits, althou 381 is the minumum (but risky).
 var baseMultiplier = 1.04; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
 
@@ -27,7 +27,7 @@ var coolingDown = false;
 var startBalance = engine.getBalance();
 var reportUrl = ''; // just chilling out here (but don't tell him to go away please)
 var cashedOut = '';
-var lastBonus = '';
+var lastBonus = 0;
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
@@ -47,7 +47,7 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.04.10 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.05.10 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
@@ -74,7 +74,7 @@ engine.on('game_starting', function(info) {
 	$('iframe').attr('src', $('iframe').attr('src'));
 
 	
-	if(sendNotifications == true){
+	if(sendNotifications == true && !firstGame){
 		if(lastBonus == undefined){
 			lastBonus = 0;
 		}
@@ -84,27 +84,25 @@ engine.on('game_starting', function(info) {
 		}else if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If we lost the last game:
 			var notifyProfit = (-Math.abs(currentBet / 100)) + bonusProfit;
 		}
-		if(!firstGame){
-			reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
-			var sendProfit = ((notifyProfit) + savedProfit).toFixed(2);
-			$.post(reportUrl,{
-				profit: sendProfit,
-				chatid: chatid,
-				chatsecret: chatsecret
-			}, 
-			function(data){
-				console.log('[Bot] Sending profit to the server.');
-				if(data == 'Sucess!'){
-					console.log('[Bot] Succesfully send profits to the server!');
-					savedProfit = 0;
-				}else{
-					savedProfit = (savedProfit).toFixed(2) + (notifyProfit).toFixed(2);
-					console.warn('[WARN] Could not send profits to the server, Trying again next round!');
-					console.warn('[WARN] Reason: ' + data);
-					console.warn('[WARN] Remaining profits to push: ' + (savedProfit / 100));
-				}
-			});
-		}
+		reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
+		var sendProfit = notifyProfit + savedProfit;
+		savedProfit = sendProfit;
+		$.post(reportUrl,{
+			profit: sendProfit,
+			chatid: chatid,
+			chatsecret: chatsecret
+		}, 
+		function(data){
+			console.log('[Bot] Sending profit to the server.');
+			if(data == 'Sucess!'){
+				console.log('[Bot] Succesfully send profits to the server!');
+				savedProfit = 0;
+			}else{
+				console.warn('[WARN] Could not send profits to the server, Trying again next round!');
+				console.warn('[WARN] Reason: ' + data);
+				console.warn('[WARN] Remaining profits to push: ' + savedProfit);
+			}
+		});
 	}
 	if((engine.getBalance() / 100) <= minBalance){
     		console.warn('[WARN] Balance lower than minimum required balance! stopping bot now...');
@@ -133,7 +131,7 @@ engine.on('game_starting', function(info) {
 		}
 		lossStreak++;    	
 	    
-		currentBet *= 19; // Then multiply base bet by 4!
+		currentBet *= 20; // Then multiply base bet by 4!
     }else { // Otherwise if win or first game:
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
 		currentBet = (baseBet * 100); // in Satoshi
