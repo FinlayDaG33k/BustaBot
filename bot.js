@@ -73,6 +73,7 @@ engine.on('game_starting', function(info) {
     
     chatgamesplayedcooldown++
     if(chatgamesplayedcooldown == 100){
+    	chatgamesplayedcooldown = 0;
     	engine.chat('I am playing using FinlayDaG33k\'s BustaBot and made'+((engine.getBalance() - startBalance) / 100).toFixed(2)+'Bits profit doing so! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
     }
     
