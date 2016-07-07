@@ -86,9 +86,9 @@ engine.on('game_starting', function(info) {
     console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
     var winlossratio = (totalgameswon / totalgamesplayed) * 100;
     if(winlossratio == 'infinity'){
-    	winlossratio == 100;
+    	winlossratio = 100;
     }else if(winlossratio == 'NaN'){
-    	winlossratio == 0;
+    	winlossratio = 0;
     }
     console.log('[Bot] I have a Win/Lose score of ' + totalgameswon + '/' + totalgameslost + '('+winlossratio+'%)');
 	
