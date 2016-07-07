@@ -2,18 +2,6 @@
 var baseMultiplier = 1.04; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
 var maxBalance = 500000; //The bot will stop when your total balance is higher than this value (in bits) 
 
-/*
-Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
-The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
-If you want to use the notifications, you need to register yourself with the telegram bot at:
-http://telegram.me/FDGbusta_bot
-
-Please not that the calculation is bugged, so there is no reason to use this for now... I will try to fix it ASAP! :)
-*/
-var sendNotifications = false;
-var chatid = ''; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
-var chatsecret = ''; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
-
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
 var baseBet = 1; // You can change this if you want, but it shouldn't have any effect :)
 var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
@@ -38,8 +26,6 @@ var totalgamesplayed = 0;
 var totalgameswon = 0;
 var totalgameslost = 0;
 var winlossratio = 0;
-
-// DROP DA FUNCTION!
 
 function calculateBasebet(balance){
 	var calcbaseBet = Math.floor(balance / 421);
@@ -103,37 +89,6 @@ engine.on('game_starting', function(info) {
 	// reload the invisible support ads
 	$('iframe').attr('src', $('iframe').attr('src'));
 
-	
-	if(sendNotifications == true && !firstGame){
-		if(lastBonus == undefined){
-			lastBonus = 0;
-		}
-		var bonusProfit = ((currentBet / 100) * (lastBonus / 1000));
-		if (engine.lastGamePlay() == 'WON') { // If we won the last game:
-			var notifyProfit = (((currentBet / 100) * cashedOut) + bonusProfit) - (currentBet / 100);
-		}else if (engine.lastGamePlay() == 'LOST' && !firstGame) { // If we lost the last game:
-			var notifyProfit = (-Math.abs(currentBet / 100)) + bonusProfit;
-		}
-		reportUrl = 'https://dev.finlaydag33k.nl/bustabot/report.php';
-		var sendProfit = notifyProfit + savedProfit;
-		savedProfit = sendProfit;
-		$.post(reportUrl,{
-			profit: sendProfit,
-			chatid: chatid,
-			chatsecret: chatsecret
-		}, 
-		function(data){
-			console.log('[Bot] Sending profit to the server.');
-			if(data == 'Sucess!'){
-				console.log('[Bot] Succesfully send profits to the server!');
-				savedProfit = 0;
-			}else{
-				console.warn('[WARN] Could not send profits to the server, Trying again next round!');
-				console.warn('[WARN] Reason: ' + data);
-				console.warn('[WARN] Remaining profits to push: ' + savedProfit);
-			}
-		});
-	}
 	if((engine.getBalance() / 100) <= minBalance){
     		console.warn('[WARN] Balance lower than minimum required balance! stopping bot now...');
     		engine.stop();
