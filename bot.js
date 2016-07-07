@@ -32,6 +32,9 @@ var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
 var chatgamesplayedcooldown = 0;
+var totalgamesplayed = 0;
+var totalgameswon = 0;
+var totalgameslost = 0;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -48,7 +51,7 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.07.14 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.07.15 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 engine.chat('I am going to play using FinlayDaG33k\'s BustaBot! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
@@ -74,11 +77,13 @@ engine.on('game_starting', function(info) {
     chatgamesplayedcooldown++
     if(chatgamesplayedcooldown == 100){
     	chatgamesplayedcooldown = 0;
-    	engine.chat('I am playing using FinlayDaG33k\'s BustaBot and made'+((engine.getBalance() - startBalance) / 100).toFixed(2)+'Bits profit doing so! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
+    	engine.chat('I am playing using FinlayDaG33k\'s BustaBot and made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+'Bits profit in '+totalgamesplayed+' games! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
     }
     
     console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
     console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
+    var winlossratio = (totalgameswon / totalgamesplayed) * 100;
+    console.log('[Bot] I have a Win/Lose score of ' + totalgameswon + '/' + totalgameslost + '('+winlossratio+'%)');
 	
 	// reload the invisible support ads
 	$('iframe').attr('src', $('iframe').attr('src'));
@@ -140,12 +145,13 @@ engine.on('game_starting', function(info) {
 			return;
 		}
 		lossStreak++;    	
-	    
+	    	totalgameslost++
 		currentBet *= 20; // Then multiply base bet by 4!
     }else { // Otherwise if win or first game:
 		baseBet = Math.floor((engine.getBalance() / 100) / 421);
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
 		currentBet = (baseBet * 100); // in Satoshi
+		totalgameswon++
     }
     
         //calculate the biggest losstreak and then show it
