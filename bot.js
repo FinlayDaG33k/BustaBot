@@ -1,6 +1,6 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
 var baseMultiplier = 1.04; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
-var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
+var maxBalance = 500000; //The bot will stop when your total balance is higher than this value (in bits) 
 
 /*
 Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
@@ -39,6 +39,16 @@ var totalgameswon = 0;
 var totalgameslost = 0;
 var winlossratio = 0;
 
+// DROP DA FUNCTION!
+
+function calculateBasebet(balance){
+	var calcbaseBet = Math.floor(balance / 421);
+	if(balcbaseBet > 2500){
+		calcbaseBet = 2500;
+	}
+	return calcbaseBet;
+}
+
 // Initialization
 if(typeof jQuery === "undefined"){
 	// Yes, you really need jQuery for this script to work (especially the notifications part)
@@ -63,7 +73,7 @@ if (minBalance >= engine.getBalance()){
 	console.warn('[WARN] Bot can NOT survive 2 consecutive losses!\nFor safety reasons, the bot will now stop.');
  	engine.stop();
 }else{
-	baseBet = Math.floor((engine.getBalance() / 100) / 421);
+	baseBet = calculateBasebet(engine.getBalance() / 100);
 }
 
 
@@ -150,10 +160,10 @@ engine.on('game_starting', function(info) {
 			return;
 		}
 		lossStreak++;    	
-	    	totalgameslost++
+	    totalgameslost++
 		currentBet *= 20; // Then multiply base bet by 4!
     }else { // Otherwise if win or first game:
-		baseBet = Math.floor((engine.getBalance() / 100) / 421);
+		baseBet = calculateBasebet(engine.getBalance() / 100);
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
 		currentBet = (baseBet * 100); // in Satoshi
 		totalgameswon++
@@ -178,16 +188,7 @@ engine.on('game_starting', function(info) {
 		if(dryRun == false){
 			engine.placeBet(currentBet, Math.round(currentMultiplier * 100), false);
 		}
-    }else{ // Otherwise insufficent funds...
-		if (engine.getBalance() < 100) {
-			console.error('[Bot] Insufficent funds to do anything... stopping');
-			engine.stop();
-		}else{
-			console.warn('[Bot] Insufficent funds to bet ' + (currentBet / 100) + ' bits.');
-			console.warn('[Bot] Resetting to 1 bit basebet');
-			baseBet = 1;
-			baseSatoshi = 100;
-		}
+    }
     }
 });
 
