@@ -1,5 +1,4 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseBet = 10; // Set the base bet (in Bits), For a baseBet of 1, we reccommend having atleast 7240 Bits, althou 381 is the minumum (but risky).
 var baseMultiplier = 1.04; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
 var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
 
@@ -14,8 +13,9 @@ var chatid = ''; // Enter your chat ID here. This one can be requested by runnin
 var chatsecret = ''; // Enter your chat secret here. This one can be requested by running the /setup command to the bot.
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
+var baseBet = 1; // You can change this if you want, but it shouldn't have any effect :)
 var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
-var minBalance = 421 * baseBet; //Bot will stop when balance becomes lower than this value. This is dynamically recalculated based on your baseBet.
+var minBalance = 421; //Bot will stop when balance becomes lower than this value. This is dynamically recalculated based on your baseBet.
 var maximumBet = 1000000; // Maximum base bet the bot will do (in bits). (Default is 1million bits, as that's the betting limit)
 var baseSatoshi = baseBet * 100; // Calculated
 var currentBet = baseSatoshi;
@@ -52,8 +52,10 @@ console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 
 if (minBalance >= engine.getBalance()){
-	console.warn('[WARN] Bot can NOT survive 4 consecutive losses!\nFor safety reasons, the bot will now stop.');
+	console.warn('[WARN] Bot can NOT survive 2 consecutive losses!\nFor safety reasons, the bot will now stop.');
  	engine.stop();
+}else{
+baseBet = Math.floor((engine.getBalance() / 100) / 421);
 }
 
 
@@ -133,6 +135,7 @@ engine.on('game_starting', function(info) {
 	    
 		currentBet *= 20; // Then multiply base bet by 4!
     }else { // Otherwise if win or first game:
+		baseBet = Math.floor((engine.getBalance() / 100) / 421);
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
 		currentBet = (baseBet * 100); // in Satoshi
     }
