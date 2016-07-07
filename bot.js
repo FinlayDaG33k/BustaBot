@@ -43,7 +43,7 @@ var winlossratio = 0;
 
 function calculateBasebet(balance){
 	var calcbaseBet = Math.floor(balance / 421);
-	if(balcbaseBet > 2500){
+	if(calcbaseBet > 2500){
 		calcbaseBet = 2500;
 	}
 	return calcbaseBet;
@@ -64,7 +64,7 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.07.15 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.07.19 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 engine.chat('I am going to play using FinlayDaG33k\'s BustaBot! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
@@ -188,7 +188,6 @@ engine.on('game_starting', function(info) {
 		if(dryRun == false){
 			engine.placeBet(currentBet, Math.round(currentMultiplier * 100), false);
 		}
-    }
     }
 });
 
