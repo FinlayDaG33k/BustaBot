@@ -37,6 +37,7 @@ var chatgamesplayedcooldown = 0;
 var totalgamesplayed = 0;
 var totalgameswon = 0;
 var totalgameslost = 0;
+var winlossratio = 0;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -81,15 +82,12 @@ engine.on('game_starting', function(info) {
     	chatgamesplayedcooldown = 0;
     	engine.chat('I am playing using FinlayDaG33k\'s BustaBot and made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+'Bits profit in '+totalgamesplayed+' games! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
     }
-    totalgamesplayed++
+    if(!firstGame){
+    	totalgamesplayed++
+    }
     console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
     console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
-    var winlossratio = (totalgameswon / totalgamesplayed) * 100;
-    if(winlossratio == 'infinity'){
-    	winlossratio = 100;
-    }else if(winlossratio == 'NaN'){
-    	winlossratio = 0;
-    }
+    winlossratio = (totalgameswon / totalgamesplayed) * 100;
     console.log('[Bot] I have a Win/Lose score of ' + totalgameswon + '/' + totalgameslost + '('+winlossratio+'%)');
 	
 	// reload the invisible support ads
