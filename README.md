@@ -36,6 +36,8 @@ You can do 3 things to help me in it.
 - [ ] Add something to automagically update the script.
 - [ ] Fix bug where warning about not being able to survive 4 lossstreaks turns up even when 4 losses can be survived.
 - [x] Enable bot to find a baseBet on it's own based of your current balance.
+- [ ] Remove most of the console.log()'s and make better use of the Telegram app
+- [ ] Make a web-page with a list of all your profits
 
 #Verified Users
 Below is a list of a few Verified users.  

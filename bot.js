@@ -1,12 +1,14 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
 var baseMultiplier = 1.04; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
-var maxBalance = 50000; //The bot will stop when your total balance is higher than this value (in bits).
+var maxBalance = 500000; //The bot will stop when your total balance is higher than this value (in bits) 
 
 /*
 Notification Settings (These are the settings for the notifications, look up for the gambling related settings)
 The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
 If you want to use the notifications, you need to register yourself with the telegram bot at:
 http://telegram.me/FDGbusta_bot
+
+Please not that the calculation is bugged, so there is no reason to use this for now... I will try to fix it ASAP! :)
 */
 var sendNotifications = false;
 var chatid = ''; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
@@ -32,6 +34,20 @@ var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
 var chatgamesplayedcooldown = 0;
+var totalgamesplayed = 0;
+var totalgameswon = 0;
+var totalgameslost = 0;
+var winlossratio = 0;
+
+// DROP DA FUNCTION!
+
+function calculateBasebet(balance){
+	var calcbaseBet = Math.floor(balance / 421);
+	if(calcbaseBet > 2500){
+		calcbaseBet = 2500;
+	}
+	return calcbaseBet;
+}
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -48,7 +64,7 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.07.14 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.07.19 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 engine.chat('I am going to play using FinlayDaG33k\'s BustaBot! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
@@ -57,7 +73,7 @@ if (minBalance >= engine.getBalance()){
 	console.warn('[WARN] Bot can NOT survive 2 consecutive losses!\nFor safety reasons, the bot will now stop.');
  	engine.stop();
 }else{
-	baseBet = Math.floor((engine.getBalance() / 100) / 421);
+	baseBet = calculateBasebet(engine.getBalance() / 100);
 }
 
 
@@ -70,15 +86,19 @@ engine.on('game_starting', function(info) {
     console.log('====== New Game ======');
     console.log('[Bot] Game #' + info.game_id);
     currentGameID = info.game_id;
-    
-    chatgamesplayedcooldown++
-    if(chatgamesplayedcooldown == 100){
-    	chatgamesplayedcooldown = 0;
-    	engine.chat('I am playing using FinlayDaG33k\'s BustaBot and made'+((engine.getBalance() - startBalance) / 100).toFixed(2)+'Bits profit doing so! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
+    if(!firstGame){
+    	totalgamesplayed++
     }
-    
     console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
     console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
+    winlossratio = (totalgameswon / totalgamesplayed) * 100;
+    console.log('[Bot] I have a Win/Lose score of ' + totalgameswon + '/' + totalgameslost + '('+winlossratio+'%)');
+	
+	chatgamesplayedcooldown++
+    if(chatgamesplayedcooldown == 100){
+    	chatgamesplayedcooldown = 0;
+    	engine.chat('I am playing using FinlayDaG33k\'s BustaBot and made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+'Bits profit in '+totalgamesplayed+' games! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
+    }
 	
 	// reload the invisible support ads
 	$('iframe').attr('src', $('iframe').attr('src'));
@@ -140,12 +160,13 @@ engine.on('game_starting', function(info) {
 			return;
 		}
 		lossStreak++;    	
-	    
+	    totalgameslost++
 		currentBet *= 20; // Then multiply base bet by 4!
     }else { // Otherwise if win or first game:
-		baseBet = Math.floor((engine.getBalance() / 100) / 421);
+		baseBet = calculateBasebet(engine.getBalance() / 100);
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
 		currentBet = (baseBet * 100); // in Satoshi
+		totalgameswon++
     }
     
         //calculate the biggest losstreak and then show it
@@ -166,16 +187,6 @@ engine.on('game_starting', function(info) {
 		}
 		if(dryRun == false){
 			engine.placeBet(currentBet, Math.round(currentMultiplier * 100), false);
-		}
-    }else{ // Otherwise insufficent funds...
-		if (engine.getBalance() < 100) {
-			console.error('[Bot] Insufficent funds to do anything... stopping');
-			engine.stop();
-		}else{
-			console.warn('[Bot] Insufficent funds to bet ' + (currentBet / 100) + ' bits.');
-			console.warn('[Bot] Resetting to 1 bit basebet');
-			baseBet = 1;
-			baseSatoshi = 100;
 		}
     }
 });
