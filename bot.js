@@ -56,7 +56,7 @@ if (minBalance >= engine.getBalance()){
 	console.warn('[WARN] Bot can NOT survive 2 consecutive losses!\nFor safety reasons, the bot will now stop.');
  	engine.stop();
 }else{
-baseBet = Math.floor((engine.getBalance() / 100) / 421);
+	baseBet = Math.floor((engine.getBalance() / 100) / 421);
 }
 
 
