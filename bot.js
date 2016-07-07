@@ -31,6 +31,7 @@ var lastBonus = 0;
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
+var chatgamesplayedcooldown = 0;
 
 // Initialization
 if(typeof jQuery === "undefined"){
@@ -69,6 +70,11 @@ engine.on('game_starting', function(info) {
     console.log('====== New Game ======');
     console.log('[Bot] Game #' + info.game_id);
     currentGameID = info.game_id;
+    
+    chatgamesplayedcooldown++
+    if(chatgamesplayedcooldown == 100){
+    	engine.chat('I am playing using FinlayDaG33k\'s BustaBot and made'+((engine.getBalance() - startBalance) / 100).toFixed(2)+'Bits profit doing so! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
+    }
     
     console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
     console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
