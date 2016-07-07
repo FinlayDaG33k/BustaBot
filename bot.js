@@ -81,7 +81,7 @@ engine.on('game_starting', function(info) {
     	chatgamesplayedcooldown = 0;
     	engine.chat('I am playing using FinlayDaG33k\'s BustaBot and made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+'Bits profit in '+totalgamesplayed+' games! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
     }
-    
+    totalgamesplayed++
     console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
     console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
     var winlossratio = (totalgameswon / totalgamesplayed) * 100;
