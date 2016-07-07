@@ -5,7 +5,11 @@ Want to make a commit to the repository?
 Great! go ahead!
 Want me to keep making the bot better and better?  
 Then please send some bits to "FinlayDaG33k" (without the quotes),  
-It will help looking for alternative strategies as I don't have to pay all losses myself (and I will lose a lot for sure and I am on a very tigh budget already)
+It will help looking for alternative strategies as I don't have to pay all losses myself (and I will lose a lot for sure and I am on a very tigh budget already)  
+  
+This bot is not build at getting huge profits per game, but rather building it up slow and steadily.  
+The bot however, is able to find a baseBet on it's own based on your current balance, it will change it every time you win so that you should get maximum profit!  
+
 
 # Support
 Want to make the bot more powerful? great!  
@@ -31,6 +35,7 @@ You can do 3 things to help me in it.
 - [x] Fix bug where last bet wouldn't get multiplied by 4 to recover loss. (was actually not a bug)
 - [ ] Add something to automagically update the script.
 - [ ] Fix bug where warning about not being able to survive 4 lossstreaks turns up even when 4 losses can be survived.
+- [x] Enable bot to find a baseBet on it's own based of your current balance.
 
 #Verified Users
 Below is a list of a few Verified users.  
