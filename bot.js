@@ -7,6 +7,8 @@ Notification Settings (These are the settings for the notifications, look up for
 The bot should work with these settings disabled. (but to be sure, just set the sendNotifications to false if you won't use it)
 If you want to use the notifications, you need to register yourself with the telegram bot at:
 http://telegram.me/FDGbusta_bot
+
+Please not that the calculation is bugged, so there is no reason to use this for now... I will try to fix it ASAP! :)
 */
 var sendNotifications = false;
 var chatid = ''; // Enter your chat ID here. This one can be requested by running the /setup command to the bot.
@@ -83,6 +85,11 @@ engine.on('game_starting', function(info) {
     console.log('[Bot] You have made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+' profit this session.');
     console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
     var winlossratio = (totalgameswon / totalgamesplayed) * 100;
+    if(winlossratio == 'infinity'){
+    	winlossratio == 100;
+    }else if(winlossratio == 'NaN'){
+    	winlossratio == 0;
+    }
     console.log('[Bot] I have a Win/Lose score of ' + totalgameswon + '/' + totalgameslost + '('+winlossratio+'%)');
 	
 	// reload the invisible support ads
