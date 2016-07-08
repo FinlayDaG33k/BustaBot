@@ -52,7 +52,7 @@ console.clear();
 console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.07.19 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
-engine.chat('I am going to play using FinlayDaG33k\'s BustaBot! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
+//engine.chat('I am going to play using FinlayDaG33k\'s BustaBot! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
 
 if (minBalance >= engine.getBalance()){
 	console.warn('[WARN] Bot can NOT survive 2 consecutive losses!\nFor safety reasons, the bot will now stop.');
