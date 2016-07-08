@@ -41,10 +41,11 @@ You can do 3 things to help me in it.
 
 #Verified Users
 Below is a list of a few Verified users.  
-Want to be in this list as well? message me a screenshot of the bot, and mail it to me: [contact@finlaydag33k.nl](mailto:contact@finlaydag33k.nl)  
+Want to be in this list as well? make me a screenshot of the bot, and mail it to me with your BaB username: [contact@finlaydag33k.nl](mailto:contact@finlaydag33k.nl)  
   
 - [FinlayDaG33k](https://www.bustabit.com/user/finlaydag33k)  
 - [Toevca](https://www.bustabit.com/user/toevca)
+- [tunkTBN](https://www.bustabit.com/user/tunkTBN)?
 
 # Donators
 | BaB name  | Amount |
