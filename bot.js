@@ -1,5 +1,5 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseMultiplier = 1.04; // Target multiplier: 1.05 (normal), 1.04 (safe) or 1.02 (uber-safe) recommended, going higher might be risky.
+var baseMultiplier = 1.04; // Target multiplier: 1.05 (normal), 1.04 (safe) or 1.02 (uber-safe) recommended, going over 1.06 can and probaably WILL get you losing.
 var maxBalance = 500000; //The bot will stop when your total balance is higher than this value (in bits) 
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
