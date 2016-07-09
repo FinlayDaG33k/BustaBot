@@ -1,6 +1,7 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
 var baseMultiplier = 1.04; // Target multiplier: 1.05 (normal), 1.04 (safe) or 1.02 (uber-safe) recommended, going over 1.06 can and probaably WILL get you losing.
 var maxBalance = 500000; //The bot will stop when your total balance is higher than this value (in bits) 
+var streakSecurity = 3; // The amount of losses you want to survive. (reccommended is 3+)
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
 var baseBet = 1; // You can change this if you want, but it shouldn't have any effect :)
@@ -26,8 +27,15 @@ var totalgameswon = 0;
 var totalgameslost = 0;
 var winlossratio = 0;
 
-function calculateBasebet(balance){
-	var calcbaseBet = Math.floor(balance / 421);
+function calculateBasebet(balance, streakSecurity){
+	var calcbaseBet = 0;
+	if(streakSecurity = 3){
+		calcbaseBet = Math.floor(balance / 421);
+	}else if(streakSecurity = 4){
+		calcbaseBet = Math.floor(balance / 8421);
+	}else if(streakSecurity = 5){
+		calcbaseBet = Math.floor(balance / 168421);
+	}
 	if(calcbaseBet > 2500){
 		calcbaseBet = 2500;
 	}
@@ -58,7 +66,7 @@ if (minBalance >= engine.getBalance()){
 	console.warn('[WARN] Bot can NOT survive 2 consecutive losses!\nFor safety reasons, the bot will now stop.');
  	engine.stop();
 }else{
-	baseBet = calculateBasebet(engine.getBalance() / 100);
+	baseBet = calculateBasebet(engine.getBalance() / 100, streakSecurity);
 }
 
 
@@ -111,7 +119,7 @@ engine.on('game_starting', function(info) {
 	    totalgameslost++
 		currentBet *= 20; // Then multiply base bet by 4!
     }else { // Otherwise if win or first game:
-		baseBet = calculateBasebet(engine.getBalance() / 100);
+		baseBet = calculateBasebet(engine.getBalance() / 100, streakSecurity);
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
 		currentBet = (baseBet * 100); // in Satoshi
 		totalgameswon++
