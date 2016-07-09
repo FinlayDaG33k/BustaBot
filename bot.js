@@ -1,7 +1,7 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseMultiplier = 1.04; // Target multiplier: 1.05 (normal), 1.04 (safe) or 1.02 (uber-safe) recommended, going over 1.06 can and probaably WILL get you losing.
+var baseMultiplier = 1.04; // Target multiplier: 1.05 (normal), 1.04 (safe) or 1.02 (uber-safe) recommended, going higher might be risky.
 var maxBalance = 500000; //The bot will stop when your total balance is higher than this value (in bits) 
-var streakSecurity = 3; // The amount of losses you want to survive. (reccommended is 3+)
+var csgocrash = false; // Set this to true if you use this bot on CS:GO-Crash
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
 var baseBet = 1; // You can change this if you want, but it shouldn't have any effect :)
@@ -20,22 +20,15 @@ var reportUrl = ''; // just chilling out here (but don't tell him to go away ple
 var cashedOut = '';
 var lastBonus = 0;
 var savedProfit = 0; // we still have to send out this profit to the server
-var username = engine.getUsername();
+var username = '';
 var highestlossStreak = 0;
 var totalgamesplayed = 0;
 var totalgameswon = 0;
 var totalgameslost = 0;
 var winlossratio = 0;
 
-function calculateBasebet(balance, streakSecurity){
-	var calcbaseBet = 0;
-	if(streakSecurity = 3){
-		calcbaseBet = Math.floor(balance / 421);
-	}else if(streakSecurity = 4){
-		calcbaseBet = Math.floor(balance / 8421);
-	}else if(streakSecurity = 5){
-		calcbaseBet = Math.floor(balance / 168421);
-	}
+function calculateBasebet(balance){
+	var calcbaseBet = Math.floor(balance / 421);
 	if(calcbaseBet > 2500){
 		calcbaseBet = 2500;
 	}
@@ -50,6 +43,13 @@ if(typeof jQuery === "undefined"){
 	document.documentElement.firstChild.appendChild(script) // now append the script into HEAD, it will fetch and be executed
 }
 
+// Get the username
+if(csgocrash){
+username = engine.getSteamID();
+}else{
+username = engine.getUsername();
+}
+
 // now create an iFrames to support the development of this bot (please disable adblockers if you want to support me!)
 var iframe = document.createElement('iframe');
 iframe.style.display = "none";
@@ -58,7 +58,7 @@ document.body.appendChild(iframe);
 
 console.clear();
 console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.08.21 ======');
-console.log('My username is: ' + engine.getUsername());
+console.log('My username is: ' +  username);
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 //engine.chat('I am going to play using FinlayDaG33k\'s BustaBot! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
 
@@ -66,7 +66,7 @@ if (minBalance >= engine.getBalance()){
 	console.warn('[WARN] Bot can NOT survive 2 consecutive losses!\nFor safety reasons, the bot will now stop.');
  	engine.stop();
 }else{
-	baseBet = calculateBasebet(engine.getBalance() / 100, streakSecurity);
+	baseBet = calculateBasebet(engine.getBalance() / 100);
 }
 
 
@@ -119,7 +119,7 @@ engine.on('game_starting', function(info) {
 	    totalgameslost++
 		currentBet *= 20; // Then multiply base bet by 4!
     }else { // Otherwise if win or first game:
-		baseBet = calculateBasebet(engine.getBalance() / 100, streakSecurity);
+		baseBet = calculateBasebet(engine.getBalance() / 100);
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
 		currentBet = (baseBet * 100); // in Satoshi
 		totalgameswon++
@@ -154,7 +154,7 @@ engine.on('game_started', function(data){
 });
 
 engine.on('cashed_out', function(data){
-    if (data.username == engine.getUsername()){      
+    if (data.username == username)){      
 		console.log('[Bot] Successfully cashed out at ' + (data.stopped_at / 100) + 'x');
 		cashedOut = data.stopped_at / 100;
     }
