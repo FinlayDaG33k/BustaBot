@@ -154,7 +154,7 @@ engine.on('game_started', function(data){
 });
 
 engine.on('cashed_out', function(data){
-    if (data.username == username)){      
+    if (data.username == username){      
 		console.log('[Bot] Successfully cashed out at ' + (data.stopped_at / 100) + 'x');
 		cashedOut = data.stopped_at / 100;
     }
