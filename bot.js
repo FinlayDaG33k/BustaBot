@@ -6,7 +6,7 @@ var csgocrash = false; // Set this to true if you use this bot on CS:GO-Crash
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
 var baseBet = 1; // You can change this if you want, but it shouldn't have any effect :)
 var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
-var minBalance = 421; //Bot will stop when balance becomes lower than this value. This is dynamically recalculated based on your baseBet.
+var minBalance = 8421;
 var maximumBet = 1000000; // Maximum base bet the bot will do (in bits). (Default is 1million bits, as that's the betting limit)
 var baseSatoshi = baseBet * 100; // Calculated
 var currentBet = baseSatoshi;
@@ -28,7 +28,7 @@ var totalgameslost = 0;
 var winlossratio = 0;
 
 function calculateBasebet(balance){
-	var calcbaseBet = Math.floor(balance / 421);
+	var calcbaseBet = Math.floor(balance / 8421);
 	if(calcbaseBet > 2500){
 		calcbaseBet = 2500;
 	}
@@ -57,13 +57,13 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.08.21 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.10.21 ======');
 console.log('My username is: ' +  username);
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
 //engine.chat('I am going to play using FinlayDaG33k\'s BustaBot! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
 
 if (minBalance >= engine.getBalance()){
-	console.warn('[WARN] Bot can NOT survive 2 consecutive losses!\nFor safety reasons, the bot will now stop.');
+	console.warn('[WARN] Bot can NOT survive 3 consecutive losses!\nFor safety reasons, the bot will now stop.');
  	engine.stop();
 }else{
 	baseBet = calculateBasebet(engine.getBalance() / 100);
