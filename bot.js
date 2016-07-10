@@ -29,8 +29,8 @@ var winlossratio = 0;
 
 function calculateBasebet(balance){
 	var calcbaseBet = Math.floor(balance / 8421);
-	if(calcbaseBet > 2500){
-		calcbaseBet = 2500;
+	if(calcbaseBet > 125){
+		calcbaseBet = 125;
 	}
 	return calcbaseBet;
 }
