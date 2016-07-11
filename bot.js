@@ -1,38 +1,41 @@
-// BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseMultiplier = 1.04; // Target multiplier: 1.05 (normal), 1.04 (safe) or 1.02 (uber-safe) recommended, going higher might be risky.
-var maxBalance = 500000; //The bot will stop when your total balance is higher than this value (in bits) 
-var csgocrash = false; // Set this to true if you use this bot on CS:GO-Crash
+// User Settings (These are the settings you may change. But be careful when doing so!)
+var user_baseMultiplier = 1.04, // Target multiplier: 1.05 (normal), 1.04 (safe) or 1.02 (uber-safe) recommended, going higher might be risky.
+user_maxBalance = 500000, //The bot will stop when your total balance is higher than this value (in bits)
+user_csgocrash = false, // Set this to true if you use this bot on CS:GO-Crash (may not properly work yet)
+user_Break = 10; // the higher this amount, the more % change the bot has to take a break. Set to 0 for no break.
 
-// Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
-var baseBet = 1; // You can change this if you want, but it shouldn't have any effect :)
-var dryRun = false; // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
-var minBalance = 8421;
-var maximumBet = 1000000; // Maximum base bet the bot will do (in bits). (Default is 1million bits, as that's the betting limit)
-var baseSatoshi = baseBet * 100; // Calculated
-var currentBet = baseSatoshi;
-var currentMultiplier = baseMultiplier;
-var currentGameID = -1;
-var firstGame = true;
-var lossStreak = 0;
-var coolingDown = false;
-var startBalance = engine.getBalance();
-var reportUrl = ''; // just chilling out here (but don't tell him to go away please)
-var cashedOut = '';
-var lastBonus = 0;
-var savedProfit = 0; // we still have to send out this profit to the server
-var username = '';
-var highestlossStreak = 0;
-var totalgamesplayed = 0;
-var totalgameswon = 0;
-var totalgameslost = 0;
-var winlossratio = 0;
+// Bot Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
+var baseBet = 1, // You can change this if you want, but it shouldn't have any effect :)
+dryRun = false, // set this to true wil disable the actual betting. (Do not change unless you know what you are doing)
+minBalance = 8421,
+maximumBet = 1000000, // Maximum base bet the bot will do (in bits). (Default is 1million bits, as that's the betting limit)
+baseSatoshi = baseBet * 100, // Calculated
+currentBet = baseSatoshi,
+currentMultiplier = user_baseMultiplier,
+currentGameID = -1,
+firstGame = true,
+lossStreak = 0,
+coolingDown = false,
+startBalance = engine.getBalance(),
+reportUrl = '', // just chilling out here (but don't tell him to go away please)
+cashedOut = '',
+lastBonus = 0,
+savedProfit = 0, // we still have to send out this profit to the server
+username = '',
+highestlossStreak = 0,
+totalgamesplayed = 0,
+totalgameswon = 0,
+totalgameslost = 0,
+winlossratio = 0,
+takingBreak = false,
+takingBreakInt = 0;
 
-function calculateBasebet(balance){
-	var calcbaseBet = Math.floor(balance / 8421);
-	if(calcbaseBet > 125){
-		calcbaseBet = 125;
+function calculateBasebet(b){
+	var a = Math.floor(b / 8421);
+	if(a > 125){
+		a = 125;
 	}
-	return calcbaseBet;
+	return a;
 }
 
 // Initialization
@@ -44,10 +47,10 @@ if(typeof jQuery === "undefined"){
 }
 
 // Get the username
-if(csgocrash){
-username = engine.getSteamID();
+if(user_csgocrash){
+	username = engine.getSteamID();
 }else{
-username = engine.getUsername();
+	username = engine.getUsername();
 }
 
 // now create an iFrames to support the development of this bot (please disable adblockers if you want to support me!)
@@ -95,7 +98,7 @@ engine.on('game_starting', function(info) {
     		engine.stop();
 	}
 	
-	if ((engine.getBalance() / 100) >= maxBalance) {
+	if ((engine.getBalance() / 100) >= user_maxBalance) {
 		console.warn('[WARN] Balance higher than maximum balance! stopping bot now...');
 		engine.stop();
 	}
@@ -116,13 +119,14 @@ engine.on('game_starting', function(info) {
 			return;
 		}
 		lossStreak++;    	
-	    totalgameslost++
+	    	totalgameslost++
 		currentBet *= 20; // Then multiply base bet by 4!
     }else { // Otherwise if win or first game:
 		baseBet = calculateBasebet(engine.getBalance() / 100);
 		lossStreak = 0; // If it was a win, we reset the lossStreak.
 		currentBet = (baseBet * 100); // in Satoshi
 		totalgameswon++
+		takingBreakInt = Math.floor(Math.random()*101)
     }
     
         //calculate the biggest losstreak and then show it
@@ -142,7 +146,11 @@ engine.on('game_starting', function(info) {
 			currentBet = maximumBet;
 		}
 		if(dryRun == false){
-			engine.placeBet(currentBet, Math.round(currentMultiplier * 100), false);
+			if(takingBreakInt < userBreak){
+				console.log('[Bot] Taking a break');
+			}else{
+				engine.placeBet(currentBet, Math.round(currentMultiplier * 100), false);
+			}
 		}
     }
 });
