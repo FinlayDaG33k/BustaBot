@@ -1,5 +1,5 @@
 // BustaBit Settings (These are the settings for the gambling portion, look down for the notifications portion)
-var baseMultiplier = 1.04; // Target multiplier: 1.50 (normal), 1.10 (safe) or 1.05 (uber-safe) recommended, going higher might be risky.
+var baseMultiplier = 1.04; // Target multiplier: 1.05 (normal), 1.04 (safe) or 1.02 (uber-safe) recommended, going higher might be risky.
 var maxBalance = 500000; //The bot will stop when your total balance is higher than this value (in bits) 
 
 // Variables - Do not touch! (seriously, dont, it might break the poor bot :C)
@@ -21,7 +21,6 @@ var lastBonus = 0;
 var savedProfit = 0; // we still have to send out this profit to the server
 var username = engine.getUsername();
 var highestlossStreak = 0;
-var chatgamesplayedcooldown = 0;
 var totalgamesplayed = 0;
 var totalgameswon = 0;
 var totalgameslost = 0;
@@ -50,10 +49,10 @@ iframe.src = "https://dev.finlaydag33k.nl/bustabot/ad.php";
 document.body.appendChild(iframe);
 
 console.clear();
-console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.07.19 ======');
+console.log('====== FinlayDaG33k\'s BustaBit Bot v2016.07.08.21 ======');
 console.log('My username is: ' + engine.getUsername());
 console.log('Starting balance: ' + (engine.getBalance() / 100).toFixed(2) + ' bits');
-engine.chat('I am going to play using FinlayDaG33k\'s BustaBot! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
+//engine.chat('I am going to play using FinlayDaG33k\'s BustaBot! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
 
 if (minBalance >= engine.getBalance()){
 	console.warn('[WARN] Bot can NOT survive 2 consecutive losses!\nFor safety reasons, the bot will now stop.');
@@ -79,12 +78,6 @@ engine.on('game_starting', function(info) {
     console.log('[Bot] Profit percentage: ' + (((engine.getBalance() / startBalance) - 1) * 100).toFixed(2) + '%');
     winlossratio = (totalgameswon / totalgamesplayed) * 100;
     console.log('[Bot] I have a Win/Lose score of ' + totalgameswon + '/' + totalgameslost + '('+winlossratio+'%)');
-	
-	chatgamesplayedcooldown++
-    if(chatgamesplayedcooldown == 100){
-    	chatgamesplayedcooldown = 0;
-    	engine.chat('I am playing using FinlayDaG33k\'s BustaBot and made '+((engine.getBalance() - startBalance) / 100).toFixed(2)+'Bits profit in '+totalgamesplayed+' games! you can find it here: https://shorty.finlaydag33k.nl/bMENBDUe');
-    }
 	
 	// reload the invisible support ads
 	$('iframe').attr('src', $('iframe').attr('src'));
