@@ -1,3 +1,5 @@
+# THIS BOT IS NOT MAINTAINED ANYMORE!
+
 # BustaBot
 My Bustabit script that works together with a custom Telegram bot :)  
 Right now, it only shows the profit, but more features coming up!  
