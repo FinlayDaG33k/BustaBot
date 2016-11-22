@@ -1,4 +1,4 @@
-# THIS BOT IS NOT MAINTAINED ANYMORE!
+# THIS BOT IS NOT MAINTAINED ANYMORE! (in fact, it's broken to the max kek)
 
 # BustaBot
 My Bustabit script that works together with a custom Telegram bot :)  
